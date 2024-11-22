@@ -10,44 +10,84 @@ import fragmentShader from '../shaders/noise.frag';
 function Effect() {
   const meshRef = useRef<THREE.Mesh>(null);
   const [time, setTime] = useState(0);
-  const { viewport } = useThree();
+  const { viewport, size } = useThree();
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
-  // Try to load WebP first, fallback to JPG
-  const [texture] = useLoader(TextureLoader, ['/images/hero.webp'], (loader) => {
+  // Handle mouse movement
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      setMousePosition({
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: -(event.clientY / window.innerHeight) * 2 + 1
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+  
+  // Load and configure texture
+  const texture = useLoader(TextureLoader, '/images/hero.webp', (loader) => {
     loader.setCrossOrigin('anonymous');
   });
   
-  // Configure texture for better quality
   useEffect(() => {
     if (texture) {
       texture.minFilter = THREE.LinearFilter;
       texture.magFilter = THREE.LinearFilter;
       texture.generateMipmaps = false;
+      
+      // Get image dimensions
+      const imageAspect = texture.image.width / texture.image.height;
+      const screenAspect = size.width / size.height;
+      
+      // Calculate scaling to maintain aspect ratio and cover viewport
+      if (imageAspect > screenAspect) {
+        texture.repeat.set(1, screenAspect / imageAspect);
+        texture.offset.set(0, (1 - screenAspect / imageAspect) / 2);
+      } else {
+        texture.repeat.set(imageAspect / screenAspect, 1);
+        texture.offset.set((1 - imageAspect / screenAspect) / 2, 0);
+      }
+      
       texture.needsUpdate = true;
     }
-  }, [texture]);
+  }, [texture, size]);
   
   useFrame((state) => {
     if (meshRef.current) {
+      const mesh = meshRef.current;
+      
+      // Update time uniform
       setTime(state.clock.getElapsedTime());
-      meshRef.current.material.uniforms.time.value = state.clock.getElapsedTime();
+      mesh.material.uniforms.time.value = state.clock.getElapsedTime();
+      
+      // Smooth camera movement based on mouse position
+      const targetX = mousePosition.x * 0.1;
+      const targetY = mousePosition.y * 0.1;
+      mesh.rotation.x += (targetY - mesh.rotation.x) * 0.05;
+      mesh.rotation.y += (targetX - mesh.rotation.y) * 0.05;
+      
+      // Add subtle floating movement
+      mesh.position.y = Math.sin(state.clock.getElapsedTime() * 0.5) * 0.02;
     }
   });
 
-  // Calculate aspect ratio to fit the screen
-  const aspectRatio = viewport.width / viewport.height;
-  const scale = aspectRatio > 1 ? [aspectRatio, 1, 1] : [1, 1/aspectRatio, 1];
-
   return (
-    <mesh ref={meshRef} position={[0, 0, 0]} scale={scale}>
-      <planeGeometry args={[2, 2]} />
+    <mesh 
+      ref={meshRef} 
+      position={[0, 0, 0]}
+    >
+      <planeGeometry args={[viewport.width, viewport.height]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={{
           time: { value: time },
           baseTexture: { value: texture },
-          resolution: { value: [viewport.width, viewport.height] }
+          resolution: { value: [size.width, size.height] },
+          mousePosition: { value: [mousePosition.x, mousePosition.y] },
+          aspectRatio: { value: size.width / size.height }
         }}
       />
     </mesh>
@@ -55,12 +95,15 @@ function Effect() {
 }
 
 export default function HeroSection() {
-  const [fallback, setFallback] = useState(false);
-
   return (
     <div className="relative w-full h-screen">
       <Canvas
-        camera={{ position: [0, 0, 1] }}
+        camera={{ 
+          position: [0, 0, 5],
+          fov: 45,
+          near: 0.1,
+          far: 100
+        }}
         style={{ 
           position: 'absolute', 
           top: 0, 
@@ -69,22 +112,10 @@ export default function HeroSection() {
           height: '100%',
           background: 'black' 
         }}
-        dpr={[1, 2]} // Optimize for retina displays
-        onError={() => setFallback(true)}
+        dpr={[1, 2]}
       >
         <Effect />
       </Canvas>
-      
-      {/* Fallback image in case Three.js fails to load */}
-      {fallback && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ 
-            backgroundImage: 'url("/images/hero-optimized.jpg")',
-            filter: 'brightness(0.9) contrast(1.1)'
-          }}
-        />
-      )}
     </div>
   );
 }
