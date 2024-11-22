@@ -11,14 +11,12 @@ export default function MovieDetailsSection() {
   const sectionRef = useRef(null);
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
   
-  // Using Framer Motion's useInView for more efficient triggering
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
 
   useEffect(() => {
     const section = sectionRef.current;
     const texts = textRefs.current;
     const ctx = gsap.context(() => {
-      // Batch animations for better performance
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -28,7 +26,6 @@ export default function MovieDetailsSection() {
         }
       });
 
-      // Animate texts in sequence with minimal performance impact
       texts.forEach((text, index) => {
         if (text) {
           tl.from(text, {
@@ -36,85 +33,111 @@ export default function MovieDetailsSection() {
             y: 50,
             duration: 0.6,
             ease: 'power2.out',
-          }, index * 0.2); // Stagger effect
+          }, index * 0.2);
         }
       });
 
-      // Optimize horizontal text animation
       gsap.to('.horizontal-text', {
         scrollTrigger: {
           trigger: section,
           start: 'top center',
           end: 'bottom center',
-          scrub: 0.5, // Reduced scrub time
-          invalidateOnRefresh: true, // Better resize handling
+          scrub: 0.5,
+          invalidateOnRefresh: true,
         },
         xPercent: -30,
         ease: 'none',
-        force3D: true, // Hardware acceleration
+        force3D: true,
+      });
+
+      // Animate the quote marks
+      gsap.from('.quote-mark', {
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse',
+        },
+        scale: 0,
+        opacity: 0,
+        duration: 1,
+        ease: 'back.out(1.7)',
+        stagger: 0.2,
       });
     }, sectionRef);
 
-    return () => ctx.revert(); // Clean up animations
+    return () => ctx.revert();
   }, []);
 
   return (
     <section 
       ref={sectionRef} 
       className="relative min-h-screen bg-black text-white py-20 overflow-hidden will-change-transform"
+      id="story"
     >
-      {/* Optimized horizontal text with transform instead of margin/position */}
       <div 
-        className="horizontal-text absolute top-1/4 whitespace-nowrap text-[20vw] font-bold opacity-10 will-change-transform"
-        style={{ transform: 'translateZ(0)' }} // Hardware acceleration
+        className="horizontal-text absolute top-1/4 whitespace-nowrap text-[20vw] font-bold opacity-5 will-change-transform"
+        style={{ transform: 'translateZ(0)' }}
       >
-        THE STORY UNFOLDS
+        WHAT IS A MAN
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto space-y-16">
-          {/* Synopsis */}
+          {/* Title and Introduction */}
           <div 
             ref={el => textRefs.current[0] = el} 
             className="space-y-6 will-change-transform"
           >
-            <h2 className="text-4xl font-bold">Synopsis</h2>
-            <p className="text-xl leading-relaxed">
-              [Your movie synopsis here - Replace with actual content]
+            <h2 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+              When We Free The World
+            </h2>
+            <p className="text-xl md:text-2xl leading-relaxed text-gray-300">
+              A profound exploration into the complexities of Black manhood in America
             </p>
           </div>
 
-          {/* Themes */}
+          {/* Main Content */}
           <div 
             ref={el => textRefs.current[1] = el} 
-            className="space-y-6 will-change-transform"
+            className="space-y-8 will-change-transform relative"
           >
-            <h2 className="text-4xl font-bold">Themes</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <h3 className="text-2xl font-semibold">Identity</h3>
-                <p className="text-lg">
-                  [Theme description here - Replace with actual content]
-                </p>
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-semibold">Transformation</h3>
-                <p className="text-lg">
-                  [Theme description here - Replace with actual content]
-                </p>
-              </div>
-            </div>
+            <span className="quote-mark absolute -left-8 -top-6 text-6xl text-gray-600 opacity-20">"</span>
+            <span className="quote-mark absolute -right-8 -bottom-6 text-6xl text-gray-600 opacity-20">"</span>
+            
+            <p className="text-lg md:text-xl leading-relaxed">
+              In this groundbreaking documentary, Kevin Powell and Evangeline Lawson embark on an intimate journey, 
+              asking Black males of all ages and backgrounds one deceptively simple question: 
+              <span className="font-semibold text-yellow-400"> what is a man?</span>
+            </p>
+
+            <p className="text-lg md:text-xl leading-relaxed">
+              Through the lens of everyday individuals – young, old, transgender, mentally challenged, and gay Black men – 
+              we explore deeply personal experiences that shape their understanding of manhood.
+            </p>
           </div>
 
-          {/* Vision */}
+          {/* Purpose */}
           <div 
             ref={el => textRefs.current[2] = el} 
-            className="space-y-6 will-change-transform"
+            className="space-y-6 will-change-transform bg-white/5 p-8 rounded-2xl backdrop-blur-sm"
           >
-            <h2 className="text-4xl font-bold">Director's Vision</h2>
-            <p className="text-xl leading-relaxed">
-              [Director's statement here - Replace with actual content]
+            <h3 className="text-2xl md:text-3xl font-bold text-yellow-400">Our Purpose</h3>
+            <p className="text-lg md:text-xl leading-relaxed">
+              This film transcends stereotypes, instead focusing on how individuals break free from society's 
+              predetermined narratives. While some conversations may be triggering, they are beautiful and necessary, 
+              delving into the words, phrases, experiences, and influences that shape Black manhood.
             </p>
+          </div>
+
+          {/* Call to Action */}
+          <div 
+            ref={el => textRefs.current[3] = el} 
+            className="text-center space-y-4 will-change-transform pt-8"
+          >
+            <p className="text-xl md:text-2xl italic text-gray-300">
+              "Please watch the film with an open mind and an open heart."
+            </p>
+            <div className="h-1 w-24 mx-auto bg-gradient-to-r from-yellow-400 to-orange-500"></div>
           </div>
         </div>
       </div>
