@@ -10,7 +10,7 @@ import fragmentShader from '../shaders/noise.frag';
 function Effect() {
   const meshRef = useRef<THREE.Mesh>(null);
   const [time, setTime] = useState(0);
-  const { viewport } = useThree();
+  const { viewport, size } = useThree();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollIntensity, setScrollIntensity] = useState(0);
   const lastScrollY = useRef(0);
@@ -50,24 +50,20 @@ function Effect() {
     texture.generateMipmaps = false;
 
     const imageAspect = texture.image.width / texture.image.height;
-    const viewportAspect = viewport.width / viewport.height;
+    const screenAspect = size.width / size.height;
 
-    let scaleX = 1;
-    let scaleY = 1;
-
-    if (viewportAspect > imageAspect) {
-      // Viewport is wider than image
-      scaleX = viewportAspect / imageAspect;
+    let scale = [1, 1, 1];
+    if (screenAspect > imageAspect) {
+      // Screen is wider than image - scale to height
+      scale[0] = screenAspect / imageAspect;
     } else {
-      // Viewport is taller than image
-      scaleY = imageAspect / viewportAspect;
+      // Screen is taller than image - scale to width
+      scale[1] = imageAspect / screenAspect;
     }
 
-    // Scale up slightly to ensure full coverage
-    const scaleFactor = 1.05;
-    meshRef.current.scale.set(scaleX * scaleFactor, scaleY * scaleFactor, 1);
+    meshRef.current.scale.set(scale[0], scale[1], 1);
     texture.needsUpdate = true;
-  }, [texture, viewport]);
+  }, [texture, size]);
 
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -95,7 +91,7 @@ function Effect() {
 
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
-      <planeGeometry args={[1, 1, 32, 32]} />
+      <planeGeometry args={[1, 1]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
@@ -127,11 +123,6 @@ export default function HeroSection() {
           width: '100%',
           height: '100%',
           background: 'black'
-        }}
-        gl={{
-          antialias: true,
-          alpha: false,
-          powerPreference: 'high-performance'
         }}
       >
         <Effect />
