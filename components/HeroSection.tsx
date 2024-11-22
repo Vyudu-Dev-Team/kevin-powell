@@ -14,12 +14,26 @@ function Effect() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollIntensity, setScrollIntensity] = useState(0);
   const lastScrollY = useRef(0);
-  
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       setMousePosition({
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1
+        x: (event.clientX / dimensions.width) * 2 - 1,
+        y: -(event.clientY / dimensions.height) * 2 + 1
       });
     };
 
@@ -38,7 +52,7 @@ function Effect() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [dimensions]);
 
   const texture = useLoader(TextureLoader, '/images/hero.webp', (loader) => {
     loader.setCrossOrigin('anonymous');
@@ -52,25 +66,25 @@ function Effect() {
     texture.generateMipmaps = false;
 
     const imageAspect = texture.image.width / texture.image.height;
-    const screenAspect = size.width / size.height;
-    
-    // Calculate dimensions to cover the viewport while maintaining aspect ratio
-    let width = viewport.width;
-    let height = viewport.height;
+    const screenAspect = dimensions.width / dimensions.height;
+
+    // Calculate scale to always fill viewport while maintaining aspect ratio
+    let scale = new THREE.Vector3(1, 1, 1);
     
     if (screenAspect > imageAspect) {
       // Screen is wider than image
-      width = viewport.width;
-      height = viewport.width / imageAspect;
+      scale.x = screenAspect / imageAspect;
     } else {
       // Screen is taller than image
-      width = viewport.height * imageAspect;
-      height = viewport.height;
+      scale.y = imageAspect / screenAspect;
     }
 
-    meshRef.current.scale.set(width, height, 1);
+    // Scale up slightly to ensure coverage
+    scale.multiplyScalar(1.1);
+    meshRef.current.scale.copy(scale);
+
     texture.needsUpdate = true;
-  }, [texture, viewport, size]);
+  }, [texture, dimensions]);
 
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -98,16 +112,16 @@ function Effect() {
 
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
-      <planeGeometry args={[1, 1]} />
+      <planeGeometry args={[2, 2]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={{
           time: { value: time },
           baseTexture: { value: texture },
-          resolution: { value: new Vector2(size.width, size.height) },
+          resolution: { value: new Vector2(dimensions.width, dimensions.height) },
           mousePosition: { value: [mousePosition.x, mousePosition.y] },
-          aspectRatio: { value: size.width / size.height },
+          aspectRatio: { value: dimensions.width / dimensions.height },
           scrollIntensity: { value: scrollIntensity }
         }}
       />

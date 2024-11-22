@@ -15,9 +15,10 @@ interface TeamMember {
 
 export default function DirectorSection() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [isGridView, setIsGridView] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { ref: sectionRef, inView } = useInView({
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true
   });
@@ -85,7 +86,7 @@ Recent projects have explored themes of human connection in an increasingly digi
       name: "Sophie Laurent",
       role: "Costume Designer",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=60"
+      image: "https://images.unsplash.com/photo-1534528741775-61582044d556?w=800&auto=format&fit=crop&q=60"
     },
     {
       id: 9,
@@ -159,164 +160,114 @@ Recent projects have explored themes of human connection in an increasingly digi
     }
   ];
 
-  const handleMemberClick = (member: TeamMember) => {
-    setSelectedMember(member);
-    setIsGridView(false);
-  };
-
-  const closeDetail = () => {
-    setIsGridView(true);
-    setTimeout(() => setSelectedMember(null), 300);
+  const handleMemberClick = (member: TeamMember, event: React.MouseEvent) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (rect) {
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      setClickPosition({ x, y });
+      setSelectedMember(member);
+    }
   };
 
   return (
-    <section 
+    <div 
       ref={sectionRef}
-      className="relative min-h-screen bg-black text-white py-20 px-4 md:px-8 overflow-hidden"
+      className="relative w-full bg-black text-white py-12 overflow-hidden"
     >
-      {/* Section Title with animated line */}
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16"
-      >
-        <h2 className="text-4xl md:text-6xl font-bold mb-4">The Team</h2>
-        <motion.div 
-          className="h-0.5 bg-white w-0 mx-auto"
-          animate={inView ? { width: "200px" } : {}}
-          transition={{ duration: 1, delay: 0.5 }}
-        />
-      </motion.div>
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-4xl font-bold">The Team</h2>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+          >
+            {isCollapsed ? 'Expand' : 'Collapse'}
+          </button>
+        </div>
 
-      {/* Grid/Detail View Container */}
-      <div ref={containerRef} className="relative max-w-8xl mx-auto">
-        <AnimatePresence mode="wait">
-          {isGridView ? (
-            // Grid View
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {teamMembers.map((member, index) => (
-                <motion.div
-                  key={member.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  onClick={() => handleMemberClick(member)}
-                  className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
+        <motion.div
+          animate={{ height: isCollapsed ? '300px' : 'auto' }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden"
+        >
+          <div 
+            ref={ref}
+            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ${
+              isCollapsed ? 'overflow-y-auto' : ''
+            }`}
+            style={{ maxHeight: isCollapsed ? '300px' : 'none' }}
+          >
+            {teamMembers.map((member, index) => (
+              <motion.div
+                key={member.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                onClick={(e) => handleMemberClick(member, e)}
+                className="relative cursor-pointer group"
+              >
+                <div className="aspect-square overflow-hidden rounded-lg">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
-                    <p className="text-lg opacity-80">{member.role}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            // Detail View
-            <motion.div
-              key="detail"
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 0.5 }}
-              className="fixed inset-0 z-50 bg-black/95 overflow-y-auto"
-            >
-              {selectedMember && (
-                <div className="min-h-screen flex flex-col md:flex-row items-center justify-center p-8">
-                  <motion.div 
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="relative w-full md:w-1/2 aspect-[3/4] md:mr-8 mb-8 md:mb-0"
-                  >
-                    <Image
-                      src={selectedMember.image}
-                      alt={selectedMember.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </motion.div>
-                  <motion.div 
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="w-full md:w-1/2"
-                  >
-                    <h2 className="text-4xl md:text-5xl font-bold mb-4">{selectedMember.name}</h2>
-                    <h3 className="text-2xl text-gray-400 mb-8">{selectedMember.role}</h3>
-                    <div className="prose prose-lg prose-invert">
-                      <p className="text-lg leading-relaxed">{selectedMember.bio}</p>
-                    </div>
-                  </motion.div>
-                  <button
-                    onClick={closeDetail}
-                    className="absolute top-8 right-8 text-white hover:text-gray-300 transition-colors"
-                  >
-                    <svg 
-                      className="w-8 h-8" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M6 18L18 6M6 6l12 12" 
-                      />
-                    </svg>
-                  </button>
                 </div>
-              )}
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold">{member.name}</h3>
+                    <p className="text-sm text-gray-300">{member.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        <AnimatePresence>
+          {selectedMember && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                position: 'absolute',
+                left: `${clickPosition.x}px`,
+                top: `${clickPosition.y}px`,
+                transform: 'translate(-50%, -50%)',
+                zIndex: 50
+              }}
+              className="bg-black/95 p-6 rounded-lg shadow-xl max-w-md w-full backdrop-blur-lg"
+            >
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="absolute top-4 right-4 text-white/60 hover:text-white"
+              >
+                ×
+              </button>
+              <div className="flex gap-4">
+                <Image
+                  src={selectedMember.image}
+                  alt={selectedMember.name}
+                  width={96}
+                  height={96}
+                  className="rounded-lg object-cover"
+                />
+                <div>
+                  <h3 className="text-xl font-bold">{selectedMember.name}</h3>
+                  <p className="text-gray-400">{selectedMember.role}</p>
+                </div>
+              </div>
+              <p className="mt-4 text-gray-300 leading-relaxed">
+                {selectedMember.bio}
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="flex flex-col items-center">
-          <span className="text-sm uppercase tracking-widest mb-2">Scroll to explore</span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-6"
-          >
-            <svg 
-              className="w-full h-full" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M19 14l-7 7m0 0l-7-7m7 7V3" 
-              />
-            </svg>
-          </motion.div>
-        </div>
-      </motion.div>
-    </section>
+    </div>
   );
 }
