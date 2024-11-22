@@ -55,17 +55,24 @@ function Effect() {
       texture.magFilter = THREE.LinearFilter;
       texture.generateMipmaps = false;
       
+      // Calculate scaling to maintain aspect ratio
       const imageAspect = texture.image.width / texture.image.height;
       const screenAspect = size.width / size.height;
       
-      if (imageAspect > screenAspect) {
-        texture.repeat.set(1, screenAspect / imageAspect);
-        texture.offset.set(0, (1 - screenAspect / imageAspect) / 2);
-      } else {
-        texture.repeat.set(imageAspect / screenAspect, 1);
-        texture.offset.set((1 - imageAspect / screenAspect) / 2, 0);
+      // Update mesh scale to maintain aspect ratio
+      if (meshRef.current) {
+        if (screenAspect > imageAspect) {
+          // Screen is wider than image
+          meshRef.current.scale.set(screenAspect / imageAspect, 1, 1);
+        } else {
+          // Screen is taller than image
+          meshRef.current.scale.set(1, imageAspect / screenAspect, 1);
+        }
       }
       
+      // Reset texture properties
+      texture.repeat.set(1, 1);
+      texture.offset.set(0, 0);
       texture.needsUpdate = true;
     }
   }, [texture, size]);
@@ -75,7 +82,7 @@ function Effect() {
       const mesh = meshRef.current;
       const elapsedTime = state.clock.getElapsedTime();
       
-      // Update time uniform
+      // Update uniforms
       setTime(elapsedTime);
       mesh.material.uniforms.time.value = elapsedTime;
       mesh.material.uniforms.scrollIntensity.value = scrollIntensity;
@@ -98,8 +105,11 @@ function Effect() {
   });
 
   return (
-    <mesh ref={meshRef} position={[0, 0, 0]}>
-      <planeGeometry args={[viewport.width, viewport.height]} />
+    <mesh 
+      ref={meshRef} 
+      position={[0, 0, 0]}
+    >
+      <planeGeometry args={[1, 1]} /> {/* Base size of 1x1, scaled by mesh.scale */}
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
@@ -121,8 +131,8 @@ export default function HeroSection() {
     <div className="relative w-full h-screen">
       <Canvas
         camera={{ 
-          position: [0, 0, 5],
-          fov: 45,
+          position: [0, 0, 1.5],
+          fov: 50,
           near: 0.1,
           far: 100
         }}
