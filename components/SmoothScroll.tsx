@@ -1,41 +1,77 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const scrollRef = useRef<Lenis | null>(null);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.8, // Reduced from 1.2 for snappier response
-      easing: (t) => 1 - Math.pow(1 - t, 5), // Using a more optimized easing function
+    // Optimize scroll settings based on device
+    scrollRef.current = new Lenis({
+      duration: isMobile ? 0.6 : 0.8,
+      easing: (t) => 1 - Math.pow(1 - t, 5),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smooth: true,
-      smoothTouch: false,
-      touchMultiplier: 1.5, // Reduced from 2 for better control
-      wheelMultiplier: 0.8, // Added for better wheel control
-      lerp: 0.1, // Lower lerp value for smoother interpolation
-      normalizeWheel: true, // Normalize wheel across browsers
-      syncTouch: true, // Better touch synchronization
+      smoothTouch: isMobile ? true : false, // Enable smooth touch for mobile
+      touchMultiplier: isMobile ? 1.2 : 1.5,
+      wheelMultiplier: isMobile ? 0.6 : 0.8,
+      lerp: isMobile ? 0.08 : 0.1, // Faster lerp on mobile
+      normalizeWheel: true,
+      syncTouch: true,
     });
 
-    lenis.on('scroll', ScrollTrigger.update); // Update ScrollTrigger on scroll
+    const lenis = scrollRef.current;
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
+    // Optimize scroll update frequency
+    const raf = (time: number) => {
+      if (lenis) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+    };
+    requestAnimationFrame(raf);
+
+    // Update ScrollTrigger on scroll with throttling
+    let lastTime = 0;
+    const interval = 1000 / 60; // 60fps
+
+    lenis.on('scroll', ({ timestamp }) => {
+      if (timestamp - lastTime > interval) {
+        ScrollTrigger.update();
+        lastTime = timestamp;
+      }
     });
 
-    // Clean up function
+    // Stop scrolling during window resize
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      if (lenis) {
+        lenis.stop();
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          lenis.start();
+          ScrollTrigger.refresh();
+        }, 100);
+      }
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    // Cleanup
     return () => {
-      gsap.ticker.remove(lenis.raf);
+      window.removeEventListener('resize', handleResize);
       lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
-  }, []);
+  }, [isMobile]);
 
   return <>{children}</>;
 }
