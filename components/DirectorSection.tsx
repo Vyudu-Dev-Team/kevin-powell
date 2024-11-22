@@ -1,9 +1,7 @@
-'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
+import Image from 'next/image';
 
 interface TeamMember {
   id: number;
@@ -16,187 +14,84 @@ interface TeamMember {
 export default function DirectorSection() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true
   });
 
-  const dummyBio = `As a visionary in the film industry, their journey began in the bustling streets of New York City. With over a decade of experience in cinematography and direction, they have crafted stories that resonate with audiences worldwide. Their unique approach to visual storytelling combines classical techniques with innovative modern perspectives.
-
-Their work has been recognized at numerous international film festivals, earning accolades for both technical excellence and narrative depth. Known for pushing creative boundaries while maintaining authenticity, they have collaborated with some of the industry's most respected talents.
-
-Beyond their technical expertise, they are passionate about mentoring the next generation of filmmakers and fostering an inclusive, collaborative environment on set. Their commitment to storytelling extends beyond the camera, as they actively engage in workshops and educational initiatives within the film community.
-
-Recent projects have explored themes of human connection in an increasingly digital world, earning critical acclaim and connecting with audiences across cultural boundaries. Their dedication to craft and ability to bring out authentic performances has made them a sought-after creative partner in both independent and studio productions.`;
-
-  const teamMembers: TeamMember[] = [
-    {
-      id: 1,
-      name: "Alex Rivera",
-      role: "Director",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 2,
-      name: "Sarah Chen",
-      role: "Cinematographer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 3,
-      name: "Marcus Thompson",
-      role: "Production Designer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 4,
-      name: "Elena Rodriguez",
-      role: "Editor",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 5,
-      name: "James Wilson",
-      role: "Sound Designer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 6,
-      name: "Mia Zhang",
-      role: "Visual Effects Supervisor",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 7,
-      name: "David Patel",
-      role: "Stunt Coordinator",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 8,
-      name: "Sophie Laurent",
-      role: "Costume Designer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1534528741775-61582044d556?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 9,
-      name: "Michael Chang",
-      role: "Art Director",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 10,
-      name: "Isabella Santos",
-      role: "Makeup Artist",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 11,
-      name: "Thomas Anderson",
-      role: "Lighting Director",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 12,
-      name: "Nina Patel",
-      role: "Script Supervisor",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 13,
-      name: "Robert Kim",
-      role: "Location Manager",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 14,
-      name: "Emma Mitchell",
-      role: "Production Manager",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1558898479-33c0057a5d12?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 15,
-      name: "Carlos Ruiz",
-      role: "Sound Mixer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 16,
-      name: "Anna Kowalski",
-      role: "Set Decorator",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1557296387-5358ad7997bb?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 17,
-      name: "Lucas Silva",
-      role: "Camera Operator",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 18,
-      name: "Grace Liu",
-      role: "Choreographer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=800&auto=format&fit=crop&q=60"
-    }
-  ];
+  const teamMembers: TeamMember[] = Array.from({ length: 18 }, (_, i) => ({
+    id: i + 1,
+    name: `Team Member ${i + 1}`,
+    role: `Role ${i + 1}`,
+    bio: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
+    image: `https://source.unsplash.com/random/800x800?portrait&sig=${i}`
+  }));
 
   const handleMemberClick = (member: TeamMember, event: React.MouseEvent) => {
     const rect = sectionRef.current?.getBoundingClientRect();
-    if (rect) {
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      setClickPosition({ x, y });
-      setSelectedMember(member);
+    if (!rect) return;
+
+    const x = event.clientX;
+    const y = event.clientY;
+    
+    // Calculate available space in different directions
+    const spaceAbove = y - rect.top;
+    const spaceBelow = rect.bottom - y;
+    const spaceLeft = x;
+    const spaceRight = window.innerWidth - x;
+
+    // Determine optimal position for popup
+    let popupX = x;
+    let popupY = y;
+
+    // Adjust horizontal position if needed
+    if (spaceRight < 400) { // 400px is approximate popup width
+      popupX = Math.max(200, x - 400); // Keep at least 200px from left edge
+    } else if (spaceLeft < 200) {
+      popupX = 200; // Minimum distance from left edge
     }
+
+    // Adjust vertical position if needed
+    if (spaceBelow < 300) { // 300px is approximate popup height
+      popupY = y - 300;
+    }
+
+    setPopupPosition({ x: popupX, y: popupY });
+    setSelectedMember(member);
   };
 
   return (
     <div 
       ref={sectionRef}
-      className="relative w-full bg-black text-white py-12 overflow-hidden"
+      className="relative w-full bg-black text-white py-16 min-h-screen"
     >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-4xl font-bold">The Team</h2>
+      <div className="container mx-auto px-4 relative">
+        <div className="flex justify-between items-center mb-12">
+          <h2 className="text-5xl font-bold">Our Team</h2>
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+            className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors text-lg"
           >
             {isCollapsed ? 'Expand' : 'Collapse'}
           </button>
         </div>
 
         <motion.div
-          animate={{ height: isCollapsed ? '300px' : 'auto' }}
+          animate={{ height: isCollapsed ? '400px' : 'auto' }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden"
+          className="relative"
         >
           <div 
             ref={ref}
-            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ${
+            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 ${
               isCollapsed ? 'overflow-y-auto' : ''
             }`}
-            style={{ maxHeight: isCollapsed ? '300px' : 'none' }}
+            style={{ 
+              maxHeight: isCollapsed ? '400px' : 'none',
+              paddingRight: isCollapsed ? '16px' : '0'
+            }}
           >
             {teamMembers.map((member, index) => (
               <motion.div
@@ -207,18 +102,18 @@ Recent projects have explored themes of human connection in an increasingly digi
                 onClick={(e) => handleMemberClick(member, e)}
                 className="relative cursor-pointer group"
               >
-                <div className="aspect-square overflow-hidden rounded-lg">
+                <div className="aspect-square overflow-hidden rounded-lg relative">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
-                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+                    className="object-cover transform transition-transform duration-300 group-hover:scale-110"
                   />
-                </div>
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold">{member.name}</h3>
-                    <p className="text-sm text-gray-300">{member.role}</p>
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="text-center p-4">
+                      <h3 className="text-xl font-semibold">{member.name}</h3>
+                      <p className="text-sm text-gray-300 mt-2">{member.role}</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -229,41 +124,47 @@ Recent projects have explored themes of human connection in an increasingly digi
         <AnimatePresence>
           {selectedMember && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
               style={{
-                position: 'absolute',
-                left: `${clickPosition.x}px`,
-                top: `${clickPosition.y}px`,
-                transform: 'translate(-50%, -50%)',
+                position: 'fixed',
+                left: `${popupPosition.x}px`,
+                top: `${popupPosition.y}px`,
+                transform: 'translate(-50%, 0)',
+                maxHeight: '80vh',
+                width: '100%',
+                maxWidth: '500px',
                 zIndex: 50
               }}
-              className="bg-black/95 p-6 rounded-lg shadow-xl max-w-md w-full backdrop-blur-lg"
+              className="bg-black/95 rounded-xl shadow-2xl backdrop-blur-lg overflow-y-auto"
             >
-              <button
-                onClick={() => setSelectedMember(null)}
-                className="absolute top-4 right-4 text-white/60 hover:text-white"
-              >
-                ×
-              </button>
-              <div className="flex gap-4">
-                <Image
-                  src={selectedMember.image}
-                  alt={selectedMember.name}
-                  width={96}
-                  height={96}
-                  className="rounded-lg object-cover"
-                />
-                <div>
-                  <h3 className="text-xl font-bold">{selectedMember.name}</h3>
-                  <p className="text-gray-400">{selectedMember.role}</p>
+              <div className="p-8">
+                <button
+                  onClick={() => setSelectedMember(null)}
+                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  <span className="text-2xl">&times;</span>
+                </button>
+                <div className="flex gap-6 items-start">
+                  <div className="relative w-32 h-32 flex-shrink-0">
+                    <Image
+                      src={selectedMember.image}
+                      alt={selectedMember.name}
+                      fill
+                      className="rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="flex-grow">
+                    <h3 className="text-2xl font-bold">{selectedMember.name}</h3>
+                    <p className="text-xl text-gray-400 mt-1">{selectedMember.role}</p>
+                    <p className="mt-4 text-gray-300 leading-relaxed">
+                      {selectedMember.bio}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <p className="mt-4 text-gray-300 leading-relaxed">
-                {selectedMember.bio}
-              </p>
             </motion.div>
           )}
         </AnimatePresence>
