@@ -12,8 +12,10 @@ function Effect() {
   const [time, setTime] = useState(0);
   const { viewport, size } = useThree();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollIntensity, setScrollIntensity] = useState(0);
+  const lastScrollY = useRef(0);
   
-  // Handle mouse movement
+  // Handle mouse movement and scroll
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       setMousePosition({
@@ -22,8 +24,24 @@ function Effect() {
       });
     };
 
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const delta = scrollY - lastScrollY.current;
+      const normalizedDelta = Math.min(Math.abs(delta) / 20, 1);
+      setScrollIntensity(normalizedDelta);
+      
+      // Decay scroll intensity
+      setTimeout(() => setScrollIntensity(prev => prev * 0.9), 100);
+      
+      lastScrollY.current = scrollY;
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
   
   // Load and configure texture
@@ -37,11 +55,9 @@ function Effect() {
       texture.magFilter = THREE.LinearFilter;
       texture.generateMipmaps = false;
       
-      // Get image dimensions
       const imageAspect = texture.image.width / texture.image.height;
       const screenAspect = size.width / size.height;
       
-      // Calculate scaling to maintain aspect ratio and cover viewport
       if (imageAspect > screenAspect) {
         texture.repeat.set(1, screenAspect / imageAspect);
         texture.offset.set(0, (1 - screenAspect / imageAspect) / 2);
@@ -57,27 +73,32 @@ function Effect() {
   useFrame((state) => {
     if (meshRef.current) {
       const mesh = meshRef.current;
+      const elapsedTime = state.clock.getElapsedTime();
       
       // Update time uniform
-      setTime(state.clock.getElapsedTime());
-      mesh.material.uniforms.time.value = state.clock.getElapsedTime();
+      setTime(elapsedTime);
+      mesh.material.uniforms.time.value = elapsedTime;
+      mesh.material.uniforms.scrollIntensity.value = scrollIntensity;
       
-      // Smooth camera movement based on mouse position
-      const targetX = mousePosition.x * 0.1;
-      const targetY = mousePosition.y * 0.1;
+      // Constant fluid movement
+      const fluidX = Math.sin(elapsedTime * 0.3) * 0.02;
+      const fluidY = Math.cos(elapsedTime * 0.2) * 0.02;
+      
+      // Combine mouse, scroll, and fluid movement
+      const targetX = (mousePosition.x * 0.1 + fluidX) * (1 + scrollIntensity * 2);
+      const targetY = (mousePosition.y * 0.1 + fluidY) * (1 + scrollIntensity * 2);
+      
+      // Smooth movement
       mesh.rotation.x += (targetY - mesh.rotation.x) * 0.05;
       mesh.rotation.y += (targetX - mesh.rotation.y) * 0.05;
       
-      // Add subtle floating movement
-      mesh.position.y = Math.sin(state.clock.getElapsedTime() * 0.5) * 0.02;
+      // Add vertical floating movement
+      mesh.position.y = Math.sin(elapsedTime * 0.5) * 0.02;
     }
   });
 
   return (
-    <mesh 
-      ref={meshRef} 
-      position={[0, 0, 0]}
-    >
+    <mesh ref={meshRef} position={[0, 0, 0]}>
       <planeGeometry args={[viewport.width, viewport.height]} />
       <shaderMaterial
         vertexShader={vertexShader}
@@ -87,7 +108,8 @@ function Effect() {
           baseTexture: { value: texture },
           resolution: { value: [size.width, size.height] },
           mousePosition: { value: [mousePosition.x, mousePosition.y] },
-          aspectRatio: { value: size.width / size.height }
+          aspectRatio: { value: size.width / size.height },
+          scrollIntensity: { value: scrollIntensity }
         }}
       />
     </mesh>
