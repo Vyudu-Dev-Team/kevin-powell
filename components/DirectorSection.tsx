@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+'use client';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
@@ -11,6 +13,120 @@ interface TeamMember {
   image: string;
 }
 
+const dummyBio = `As a visionary in the film industry, their journey began in the bustling streets of New York City. With over a decade of experience in cinematography and direction, they have crafted stories that resonate with audiences worldwide. Their unique approach to visual storytelling combines classical techniques with innovative modern perspectives.
+
+Their work has been recognized at numerous international film festivals, earning accolades for both technical excellence and narrative depth. Known for pushing creative boundaries while maintaining authenticity, they have collaborated with some of the industry's most respected talents.`;
+
+const teamMembers: TeamMember[] = [
+  {
+    id: 1,
+    name: "Alex Rivera",
+    role: "Director",
+    bio: dummyBio,
+    image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=800&auto=format&fit=crop&q=60"
+  },
+  {
+    id: 2,
+    name: "Sarah Chen",
+    role: "Cinematographer",
+    bio: dummyBio,
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60"
+  },
+  {
+    id: 3,
+    name: "Marcus Thompson",
+    role: "Production Designer",
+    bio: dummyBio,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=60"
+  },
+  // Add more team members as needed...
+];
+
+const TeamMemberCard = React.memo(({ member, onClick }: { member: TeamMember; onClick: (member: TeamMember, event: React.MouseEvent) => void }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    onClick={(e) => onClick(member, e)}
+    className="relative cursor-pointer group"
+  >
+    <div className="aspect-square overflow-hidden rounded-lg relative">
+      <Image
+        src={member.image}
+        alt={member.name}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover transform transition-transform duration-300 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="text-center p-4">
+          <h3 className="text-xl font-semibold">{member.name}</h3>
+          <p className="text-sm text-gray-300 mt-2">{member.role}</p>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+));
+
+TeamMemberCard.displayName = 'TeamMemberCard';
+
+const TeamMemberPopup = React.memo(({ 
+  member, 
+  position, 
+  onClose 
+}: { 
+  member: TeamMember; 
+  position: { x: number; y: number }; 
+  onClose: () => void 
+}) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.9 }}
+    transition={{ duration: 0.2 }}
+    style={{
+      position: 'fixed',
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+      transform: 'translate(-50%, 0)',
+      maxHeight: '80vh',
+      width: '100%',
+      maxWidth: '500px',
+      zIndex: 50
+    }}
+    className="bg-black/95 rounded-xl shadow-2xl backdrop-blur-lg overflow-y-auto"
+  >
+    <div className="p-8">
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+      >
+        <span className="text-2xl">&times;</span>
+      </button>
+      <div className="flex gap-6 items-start">
+        <div className="relative w-32 h-32 flex-shrink-0">
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            sizes="128px"
+            className="rounded-lg object-cover"
+          />
+        </div>
+        <div className="flex-grow">
+          <h3 className="text-2xl font-bold">{member.name}</h3>
+          <p className="text-xl text-gray-400 mt-1">{member.role}</p>
+          <p className="mt-4 text-gray-300 leading-relaxed">
+            {member.bio}
+          </p>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+));
+
+TeamMemberPopup.displayName = 'TeamMemberPopup';
+
 export default function DirectorSection() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -21,14 +137,6 @@ export default function DirectorSection() {
     triggerOnce: true
   });
 
-  const teamMembers: TeamMember[] = Array.from({ length: 18 }, (_, i) => ({
-    id: i + 1,
-    name: `Team Member ${i + 1}`,
-    role: `Role ${i + 1}`,
-    bio: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-    image: `https://source.unsplash.com/random/800x800?portrait&sig=${i}`
-  }));
-
   const handleMemberClick = (member: TeamMember, event: React.MouseEvent) => {
     const rect = sectionRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -37,25 +145,21 @@ export default function DirectorSection() {
     const y = event.clientY;
     
     // Calculate available space in different directions
-    const spaceAbove = y - rect.top;
-    const spaceBelow = rect.bottom - y;
-    const spaceLeft = x;
     const spaceRight = window.innerWidth - x;
+    const spaceBelow = window.innerHeight - y;
 
     // Determine optimal position for popup
     let popupX = x;
     let popupY = y;
 
     // Adjust horizontal position if needed
-    if (spaceRight < 400) { // 400px is approximate popup width
-      popupX = Math.max(200, x - 400); // Keep at least 200px from left edge
-    } else if (spaceLeft < 200) {
-      popupX = 200; // Minimum distance from left edge
+    if (spaceRight < 400) {
+      popupX = Math.max(250, window.innerWidth - 400);
     }
 
     // Adjust vertical position if needed
-    if (spaceBelow < 300) { // 300px is approximate popup height
-      popupY = y - 300;
+    if (spaceBelow < 400) {
+      popupY = Math.max(y - 200, 200);
     }
 
     setPopupPosition({ x: popupX, y: popupY });
@@ -94,78 +198,22 @@ export default function DirectorSection() {
             }}
           >
             {teamMembers.map((member, index) => (
-              <motion.div
+              <TeamMemberCard
                 key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={(e) => handleMemberClick(member, e)}
-                className="relative cursor-pointer group"
-              >
-                <div className="aspect-square overflow-hidden rounded-lg relative">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover transform transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-center p-4">
-                      <h3 className="text-xl font-semibold">{member.name}</h3>
-                      <p className="text-sm text-gray-300 mt-2">{member.role}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                member={member}
+                onClick={handleMemberClick}
+              />
             ))}
           </div>
         </motion.div>
 
         <AnimatePresence>
           {selectedMember && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              style={{
-                position: 'fixed',
-                left: `${popupPosition.x}px`,
-                top: `${popupPosition.y}px`,
-                transform: 'translate(-50%, 0)',
-                maxHeight: '80vh',
-                width: '100%',
-                maxWidth: '500px',
-                zIndex: 50
-              }}
-              className="bg-black/95 rounded-xl shadow-2xl backdrop-blur-lg overflow-y-auto"
-            >
-              <div className="p-8">
-                <button
-                  onClick={() => setSelectedMember(null)}
-                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                >
-                  <span className="text-2xl">&times;</span>
-                </button>
-                <div className="flex gap-6 items-start">
-                  <div className="relative w-32 h-32 flex-shrink-0">
-                    <Image
-                      src={selectedMember.image}
-                      alt={selectedMember.name}
-                      fill
-                      className="rounded-lg object-cover"
-                    />
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-bold">{selectedMember.name}</h3>
-                    <p className="text-xl text-gray-400 mt-1">{selectedMember.role}</p>
-                    <p className="mt-4 text-gray-300 leading-relaxed">
-                      {selectedMember.bio}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <TeamMemberPopup
+              member={selectedMember}
+              position={popupPosition}
+              onClose={() => setSelectedMember(null)}
+            />
           )}
         </AnimatePresence>
       </div>

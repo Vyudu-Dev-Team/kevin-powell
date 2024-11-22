@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
@@ -52,14 +52,20 @@ function Effect() {
     const imageAspect = texture.image.width / texture.image.height;
     const viewportAspect = viewport.width / viewport.height;
 
-    let scale = [1, 1, 1];
+    let scaleX = 1;
+    let scaleY = 1;
+
     if (viewportAspect > imageAspect) {
-      scale[0] = viewportAspect / imageAspect;
+      // Viewport is wider than image
+      scaleX = viewportAspect / imageAspect;
     } else {
-      scale[1] = imageAspect / viewportAspect;
+      // Viewport is taller than image
+      scaleY = imageAspect / viewportAspect;
     }
 
-    meshRef.current.scale.set(scale[0], scale[1], scale[2]);
+    // Scale up slightly to ensure full coverage
+    const scaleFactor = 1.05;
+    meshRef.current.scale.set(scaleX * scaleFactor, scaleY * scaleFactor, 1);
     texture.needsUpdate = true;
   }, [texture, viewport]);
 
@@ -106,13 +112,13 @@ function Effect() {
 
 export default function HeroSection() {
   return (
-    <div className="relative w-full h-[100vh]">
+    <div className="relative w-full h-screen">
       <Canvas
         camera={{ 
           position: [0, 0, 1],
-          fov: 50,
+          fov: 45,
           near: 0.1,
-          far: 1000
+          far: 100
         }}
         style={{ 
           position: 'absolute',
@@ -121,6 +127,11 @@ export default function HeroSection() {
           width: '100%',
           height: '100%',
           background: 'black'
+        }}
+        gl={{
+          antialias: true,
+          alpha: false,
+          powerPreference: 'high-performance'
         }}
       >
         <Effect />
