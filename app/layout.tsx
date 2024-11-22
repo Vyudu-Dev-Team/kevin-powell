@@ -2,6 +2,7 @@ import './globals.css';
 import { Playfair_Display } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
 import CustomCursor from '@/components/CustomCursor';
+import type { Metadata, Viewport } from 'next';
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -9,10 +10,16 @@ const playfair = Playfair_Display({
   variable: '--font-playfair'
 });
 
-export const metadata = {
-  title: 'Kevin Powell Film',
-  description: 'Official website for Kevin Powell\'s latest film',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
+export const metadata: Metadata = {
+  title: 'When We Free The World',
+  description: 'A Film by Kevin Powell',
 };
 
 export default function RootLayout({
