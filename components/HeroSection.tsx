@@ -1,68 +1,90 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import styles from '../styles/HeroSection.module.css';
+import { useEffect, useRef, useState } from 'react';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
+import { TextureLoader } from 'three';
+import * as THREE from 'three';
+import vertexShader from '../shaders/noise.vert';
+import fragmentShader from '../shaders/noise.frag';
 
-export default function HeroSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
+function Effect() {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const [time, setTime] = useState(0);
+  const { viewport } = useThree();
+  
+  // Try to load WebP first, fallback to JPG
+  const [texture] = useLoader(TextureLoader, ['/images/hero.webp'], (loader) => {
+    loader.setCrossOrigin('anonymous');
+  });
+  
+  // Configure texture for better quality
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (texture) {
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.generateMipmaps = false;
+      texture.needsUpdate = true;
+    }
+  }, [texture]);
+  
+  useFrame((state) => {
+    if (meshRef.current) {
+      setTime(state.clock.getElapsedTime());
+      meshRef.current.material.uniforms.time.value = state.clock.getElapsedTime();
+    }
+  });
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas size to match container
-    const resizeCanvas = () => {
-      const container = containerRef.current;
-      if (container) {
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
-      }
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // TV static animation
-    let animationFrameId: number;
-    const animate = () => {
-      const imageData = ctx.createImageData(canvas.width, canvas.height);
-      const data = imageData.data;
-
-      // Generate noise
-      for (let i = 0; i < data.length; i += 4) {
-        const noise = Math.random() * 255 * 0.1;
-        data[i] = data[i + 1] = data[i + 2] = noise;
-        data[i + 3] = 25;
-      }
-
-      ctx.putImageData(imageData, 0, 0);
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
+  // Calculate aspect ratio to fit the screen
+  const aspectRatio = viewport.width / viewport.height;
+  const scale = aspectRatio > 1 ? [aspectRatio, 1, 1] : [1, 1/aspectRatio, 1];
 
   return (
-    <div ref={containerRef} className={styles.heroContainer}>
-      <div 
-        className={styles.heroImage}
-        style={{ backgroundImage: 'url("/hero-image.jpg")' }}
+    <mesh ref={meshRef} position={[0, 0, 0]} scale={scale}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={{
+          time: { value: time },
+          baseTexture: { value: texture },
+          resolution: { value: [viewport.width, viewport.height] }
+        }}
       />
-      <canvas
-        ref={canvasRef}
-        className={styles.noiseOverlay}
-      />
-      <div className={styles.scanline} />
-      <div className={styles.vignette} />
+    </mesh>
+  );
+}
+
+export default function HeroSection() {
+  const [fallback, setFallback] = useState(false);
+
+  return (
+    <div className="relative w-full h-screen">
+      <Canvas
+        camera={{ position: [0, 0, 1] }}
+        style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%',
+          background: 'black' 
+        }}
+        dpr={[1, 2]} // Optimize for retina displays
+        onError={() => setFallback(true)}
+      >
+        <Effect />
+      </Canvas>
+      
+      {/* Fallback image in case Three.js fails to load */}
+      {fallback && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: 'url("/images/hero-optimized.jpg")',
+            filter: 'brightness(0.9) contrast(1.1)'
+          }}
+        />
+      )}
     </div>
   );
 }
