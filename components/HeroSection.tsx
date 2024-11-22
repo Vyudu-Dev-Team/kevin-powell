@@ -5,10 +5,12 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import gsap from 'gsap';
 import SplitType from 'split-type';
+import styles from '../styles/HeroSection.module.css';
 
 export default function HeroSection() {
   const titleRef = useRef(null);
   const containerRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -38,10 +40,54 @@ export default function HeroSection() {
       y: '20%',
       ease: 'none'
     });
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas size to match container
+    const resizeCanvas = () => {
+      const container = containerRef.current;
+      if (container) {
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // TV static animation
+    let animationFrameId: number;
+    const animate = () => {
+      const imageData = ctx.createImageData(canvas.width, canvas.height);
+      const data = imageData.data;
+
+      // Generate noise
+      for (let i = 0; i < data.length; i += 4) {
+        const noise = Math.random() * 255 * 0.1; // Reduced intensity to 10%
+        data[i] = data[i + 1] = data[i + 2] = noise;
+        data[i + 3] = 25; // Set alpha to 10% for subtlety
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section ref={containerRef} className={styles.heroContainer}>
+      {/* Background Image */}
       <motion.div
         className="absolute inset-0 z-0 hero-image"
         initial={{ scale: 1.2 }}
@@ -120,6 +166,19 @@ export default function HeroSection() {
           </div>
         </div>
       </motion.div>
+
+      {/* Static Noise Overlay */}
+      <canvas
+        ref={canvasRef}
+        className={styles.noiseOverlay}
+        style={{ opacity: 0.4 }}
+      />
+
+      {/* Scanline Effect */}
+      <div className={styles.scanline} />
+
+      {/* Vignette Effect */}
+      <div className={styles.vignette} />
     </section>
   );
 }
