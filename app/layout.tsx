@@ -1,5 +1,6 @@
 import './globals.css';
 import { Playfair_Display } from 'next/font/google';
+import SmoothScroll from '@/components/SmoothScroll';
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -8,8 +9,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: 'Modern Film Site',
-  description: 'A cinematic journey through storytelling',
+  title: 'Kevin Powell Film',
+  description: 'Official website for Kevin Powell\'s latest film',
 };
 
 export default function RootLayout({
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={playfair.variable} suppressHydrationWarning>
       <body className={`${playfair.className} antialiased`} suppressHydrationWarning>
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );
