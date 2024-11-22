@@ -85,6 +85,20 @@ export default function MovieDetailsSection() {
       {/* Main Content Container */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
+          {/* Hero Section */}
+          <div className="mb-24 text-center">
+            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white to-gray-400 text-transparent bg-clip-text mb-6">
+              When We Free The World
+            </h1>
+            <div className="text-xl md:text-2xl text-gray-300 space-y-2 mb-8">
+              <p>A FILM BY Kevin Powell</p>
+              <p>Produced by Evangeline Lawson & Kevin Powell</p>
+            </div>
+            <div className="text-2xl md:text-3xl text-gray-200 italic">
+              What Does it Really Mean To Be A Man
+            </div>
+          </div>
+
           {/* Title Section */}
           <div 
             ref={el => textRefs.current[0] = el} 
