@@ -1,43 +1,63 @@
 .heroContainer {
   position: relative;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   background-color: black;
 }
 
-/* Mobile styles */
+.imageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+/* Portrait mode adjustments */
+@media (orientation: portrait) {
+  .heroContainer {
+    height: 100vh;
+  }
+  
+  .imageWrapper {
+    width: 100vw;
+    height: 100%;
+    transform-origin: center center;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) {
+  .heroContainer {
+    height: 100vh;
+  }
+  
+  .imageWrapper {
+    width: 100%;
+    height: 100vh;
+    transform-origin: center center;
+  }
+}
+
+/* Mobile devices */
 @media (max-width: 640px) {
   .heroContainer {
     height: calc(100vh - 60px); /* Adjust for mobile header */
   }
 }
 
-/* Tablet styles */
+/* Tablets */
 @media (min-width: 641px) and (max-width: 1024px) {
   .heroContainer {
     height: calc(100vh - 80px); /* Adjust for tablet header */
   }
 }
 
-/* Desktop styles */
-@media (min-width: 1025px) {
-  .heroContainer {
-    height: 100vh;
-  }
-}
-
-/* Ultrawide styles */
+/* Large screens */
 @media (min-width: 1921px) {
   .heroContainer {
-    height: 100vh;
-    max-height: 1080px; /* Prevent excessive height on ultrawide displays */
-  }
-}
-
-/* Portrait orientation */
-@media (orientation: portrait) {
-  .heroContainer {
-    height: 80vh; /* Slightly shorter in portrait mode */
+    max-height: 1080px; /* Cap height on very large screens */
   }
 }
