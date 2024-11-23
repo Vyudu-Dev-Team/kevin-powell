@@ -13,6 +13,47 @@
   width: 100%;
   height: 100%;
   will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.tiltWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: opacity 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
+.glareEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tiltWrapper:hover .glareEffect {
+  opacity: var(--glare-opacity, 0.2);
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .tiltWrapper {
+    transform: none !important;
+  }
+  
+  .glareEffect {
+    display: none;
+  }
 }
 
 /* Portrait mode adjustments */
@@ -59,5 +100,17 @@
 @media (min-width: 1921px) {
   .heroContainer {
     max-height: 1080px; /* Cap height on very large screens */
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tiltWrapper {
+    transition: opacity 0.5s linear;
+    transform: none !important;
+  }
+  
+  .glareEffect {
+    display: none;
   }
 }

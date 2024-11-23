@@ -1,72 +1,105 @@
-'use client';
-
-import React, { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/HeroSection.module.css';
+import { useScroll, useTransform, motion } from 'framer-motion';
 
-export default function HeroSection() {
-  const imageRef = useRef<HTMLImageElement>(null);
+interface HeroSectionProps {
+  imageUrl: string;
+  alt: string;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, alt }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Effect to handle aspect ratio on resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (!containerRef.current || !imageRef.current) return;
-
-      const container = containerRef.current;
-      const image = imageRef.current;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const imageNaturalRatio = 16 / 9; // Assuming a 16:9 image, adjust if different
-
-      // Calculate container dimensions
-      let containerWidth = viewportWidth;
-      let containerHeight = viewportHeight;
-
-      // Adjust container size to maintain aspect ratio while covering viewport
-      const containerRatio = containerWidth / containerHeight;
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { scrollY } = useScroll();
+  
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const scale = useTransform(scrollY, [0, 300], [1.05, 1]);
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    setMousePosition({ x, y });
+    
+    if (containerRef.current) {
+      const tiltX = ((y - 0.5) * 2) * 5; // 5 degrees max tilt
+      const tiltY = ((x - 0.5) * -2) * 5;
       
-      if (containerRatio > imageNaturalRatio) {
-        // Container is wider than image ratio
-        containerHeight = containerWidth / imageNaturalRatio;
-      } else {
-        // Container is taller than image ratio
-        containerWidth = containerHeight * imageNaturalRatio;
-      }
-
-      // Center the container if it's larger than viewport
-      const translateX = (viewportWidth - containerWidth) / 2;
-      const translateY = (viewportHeight - containerHeight) / 2;
-
-      container.style.width = `${containerWidth}px`;
-      container.style.height = `${containerHeight}px`;
-      container.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      containerRef.current.style.setProperty('--mouse-x', `${x * 100}%`);
+      containerRef.current.style.setProperty('--mouse-y', `${y * 100}%`);
+      
+      containerRef.current.style.transform = `
+        perspective(1000px)
+        rotateX(${tiltX}deg)
+        rotateY(${tiltY}deg)
+        scale3d(1.05, 1.05, 1.05)
+      `;
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    if (containerRef.current) {
+      containerRef.current.style.transform = `
+        perspective(1000px)
+        rotateX(0deg)
+        rotateY(0deg)
+        scale3d(1, 1, 1)
+      `;
+    }
+  };
+  
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const resetTransform = () => {
+      container.style.transform = `
+        perspective(1000px)
+        rotateX(0deg)
+        rotateY(0deg)
+        scale3d(1, 1, 1)
+      `;
     };
-
-    // Initial calculation
-    handleResize();
-
-    // Add resize listener
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    // Reset on scroll to prevent jarring effects
+    window.addEventListener('scroll', resetTransform);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('scroll', resetTransform);
+    };
   }, []);
 
   return (
-    <section className={styles.heroContainer}>
-      <div ref={containerRef} className={styles.imageWrapper}>
-        <Image
-          ref={imageRef}
-          src="/images/hero.webp"
-          alt="Hero Image"
-          fill
-          priority
-          quality={100}
-          sizes="100vw"
-          style={{
-            objectFit: 'cover',
-          }}
-        />
+    <motion.div 
+      ref={containerRef}
+      className={styles.heroContainer}
+      style={{ opacity }}
+    >
+      <div 
+        className={styles.imageWrapper}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <motion.div className={styles.tiltWrapper} style={{ scale }}>
+          <img
+            src={imageUrl}
+            alt={alt}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              aspectRatio: '16/9',
+            }}
+          />
+          <div className={styles.glareEffect} />
+        </motion.div>
       </div>
-    </section>
+    </motion.div>
   );
-}
+};
+
+export default HeroSection;
