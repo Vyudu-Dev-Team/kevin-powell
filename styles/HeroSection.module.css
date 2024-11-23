@@ -11,8 +11,8 @@
 
 .imageWrapper {
   position: relative;
-  width: min(85%, calc(85vh * 16/9)); /* This ensures the image maintains 16:9 ratio and fits within view */
-  height: min(calc(85vw * 9/16), 85vh);
+  width: min(70%, 1920px);
+  aspect-ratio: 1920/1080;
   margin: auto;
   will-change: transform;
   transform-style: preserve-3d;
