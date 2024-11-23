@@ -1,13 +1,19 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import styles from '../styles/HeroSection.module.css';
 import { useScroll, useTransform, motion } from 'framer-motion';
 
 interface HeroSectionProps {
-  imageUrl: string;
-  alt: string;
+  imageUrl?: string;
+  alt?: string;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, alt }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ 
+  imageUrl = '/images/hero.webp',
+  alt = 'Hero Image'
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { scrollY } = useScroll();
@@ -85,14 +91,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, alt }) => {
         onMouseLeave={handleMouseLeave}
       >
         <motion.div className={styles.tiltWrapper} style={{ scale }}>
-          <img
+          <Image
             src={imageUrl}
             alt={alt}
+            fill
+            priority
+            quality={100}
+            sizes="100vw"
             style={{
-              width: '100%',
-              height: '100%',
               objectFit: 'cover',
-              aspectRatio: '16/9',
             }}
           />
           <div className={styles.glareEffect} />
