@@ -11,7 +11,7 @@
 
 .imageWrapper {
   position: relative;
-  width: min(70%, 1920px);
+  width: min(60%, 1440px);
   aspect-ratio: 1920/1080;
   margin: auto;
   will-change: transform;
