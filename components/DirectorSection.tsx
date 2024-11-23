@@ -168,12 +168,18 @@ Beyond their technical expertise, they are passionate about mentoring the next g
     };
   }, [isGridView]);
 
-  const handleMemberClick = (member: TeamMember) => {
+  const handleMemberClick = (member: TeamMember, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent any default navigation
+    e.stopPropagation(); // Stop event bubbling
     setSelectedMember(member);
     setIsGridView(false);
   };
 
-  const closeDetail = () => {
+  const closeDetail = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsGridView(true);
     setTimeout(() => setSelectedMember(null), 300);
   };
@@ -217,7 +223,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  onClick={() => handleMemberClick(member)}
+                  onClick={(e) => handleMemberClick(member, e)}
                   className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
@@ -235,9 +241,9 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                 </motion.div>
               ))}
             </motion.div>
-          ) : (
-            // Popup View with Overlay
-            <>
+          ) : selectedMember ? (
+            // Detail View Container
+            <div className="fixed inset-0 z-50 overflow-hidden">
               {/* Overlay */}
               <motion.div
                 key="overlay"
@@ -245,78 +251,74 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-                style={{ zIndex: 50 }}
-                onClick={closeDetail}
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                onClick={(e) => closeDetail(e)}
               />
               
-              {/* Popup */}
-              {selectedMember && (
-                <motion.div
-                  key="popup"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ 
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30
-                  }}
-                  style={{ zIndex: 51 }}
-                  className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl 
-                           bg-neutral-900 rounded-lg overflow-hidden shadow-2xl border border-neutral-800"
-                >
-                  <div className="relative w-full max-h-[80vh] flex flex-col md:flex-row">
-                    {/* Image Container */}
-                    <div className="w-full md:w-1/2 relative">
-                      <div className="aspect-[3/4] relative">
-                        <Image
-                          src={selectedMember.image}
-                          alt={selectedMember.name}
-                          fill
-                          sizes="(max-width: 768px) 90vw, 40vw"
-                          className="object-cover"
-                          priority
-                        />
-                      </div>
+              {/* Popup Content */}
+              <motion.div
+                key="popup"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30
+                }}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                         w-[90vw] md:w-[80vw] max-w-4xl bg-neutral-900 rounded-lg 
+                         shadow-2xl border border-neutral-800 z-[60]"
+              >
+                <div className="flex flex-col md:flex-row max-h-[80vh]">
+                  {/* Image Container */}
+                  <div className="w-full md:w-1/2 relative">
+                    <div className="aspect-[3/4] relative">
+                      <Image
+                        src={selectedMember.image}
+                        alt={selectedMember.name}
+                        fill
+                        sizes="(max-width: 768px) 90vw, 40vw"
+                        className="object-cover"
+                        priority
+                      />
                     </div>
-
-                    {/* Content Container */}
-                    <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-[unset]">
-                      <h2 className="text-2xl md:text-3xl font-bold mb-2">{selectedMember.name}</h2>
-                      <h3 className="text-xl text-gray-400 mb-4">{selectedMember.role}</h3>
-                      <div className="prose prose-sm md:prose-base prose-invert">
-                        <p className="leading-relaxed">{selectedMember.bio}</p>
-                      </div>
-                    </div>
-
-                    {/* Close Button */}
-                    <button
-                      onClick={closeDetail}
-                      className="absolute top-4 right-4 text-white hover:text-gray-300 
-                               transition-colors p-2 rounded-full hover:bg-white/10"
-                      style={{ zIndex: 52 }}
-                      aria-label="Close details"
-                    >
-                      <svg 
-                        className="w-6 h-6" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M6 18L18 6M6 6l12 12" 
-                        />
-                      </svg>
-                    </button>
                   </div>
-                </motion.div>
-              )}
-            </>
-          )}
+
+                  {/* Content Container */}
+                  <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2">{selectedMember.name}</h2>
+                    <h3 className="text-xl text-gray-400 mb-4">{selectedMember.role}</h3>
+                    <div className="prose prose-sm md:prose-base prose-invert">
+                      <p className="leading-relaxed">{selectedMember.bio}</p>
+                    </div>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={(e) => closeDetail(e)}
+                    className="absolute top-4 right-4 text-white hover:text-gray-300 
+                             transition-colors p-2 rounded-full hover:bg-white/10 z-[70]"
+                    aria-label="Close details"
+                  >
+                    <svg 
+                      className="w-6 h-6" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M6 18L18 6M6 6l12 12" 
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          ) : null}
         </AnimatePresence>
       </div>
 
