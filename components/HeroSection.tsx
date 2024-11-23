@@ -31,17 +31,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     setMousePosition({ x, y });
     
     if (containerRef.current) {
-      const tiltX = ((y - 0.5) * 2) * 5; // 5 degrees max tilt
-      const tiltY = ((x - 0.5) * -2) * 5;
+      const tiltX = ((y - 0.5) * 2) * 15; 
+      const tiltY = ((x - 0.5) * -2) * 15;
       
       containerRef.current.style.setProperty('--mouse-x', `${x * 100}%`);
       containerRef.current.style.setProperty('--mouse-y', `${y * 100}%`);
       
       containerRef.current.style.transform = `
-        perspective(1000px)
+        perspective(2000px)
         rotateX(${tiltX}deg)
         rotateY(${tiltY}deg)
-        scale3d(1.05, 1.05, 1.05)
+        scale3d(1, 1, 1)
       `;
     }
   };
@@ -49,10 +49,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const handleMouseLeave = () => {
     if (containerRef.current) {
       containerRef.current.style.transform = `
-        perspective(1000px)
+        perspective(2000px)
         rotateX(0deg)
         rotateY(0deg)
-        scale3d(1, 1, 1)
+        scale3d(0.85, 0.85, 0.85)
       `;
     }
   };
@@ -63,7 +63,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     
     const resetTransform = () => {
       container.style.transform = `
-        perspective(1000px)
+        perspective(2000px)
         rotateX(0deg)
         rotateY(0deg)
         scale3d(1, 1, 1)
