@@ -245,7 +245,8 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9998]"
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                style={{ zIndex: 50 }}
                 onClick={closeDetail}
               />
               
@@ -261,10 +262,11 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                     stiffness: 300,
                     damping: 30
                   }}
+                  style={{ zIndex: 51 }}
                   className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl 
-                           max-h-[80vh] bg-black/95 rounded-lg overflow-hidden z-[9999] shadow-2xl"
+                           bg-neutral-900 rounded-lg overflow-hidden shadow-2xl border border-neutral-800"
                 >
-                  <div className="relative w-full h-full flex flex-col md:flex-row">
+                  <div className="relative w-full max-h-[80vh] flex flex-col md:flex-row">
                     {/* Image Container */}
                     <div className="w-full md:w-1/2 relative">
                       <div className="aspect-[3/4] relative">
@@ -280,7 +282,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                     </div>
 
                     {/* Content Container */}
-                    <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto">
+                    <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-[unset]">
                       <h2 className="text-2xl md:text-3xl font-bold mb-2">{selectedMember.name}</h2>
                       <h3 className="text-xl text-gray-400 mb-4">{selectedMember.role}</h3>
                       <div className="prose prose-sm md:prose-base prose-invert">
@@ -292,7 +294,8 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                     <button
                       onClick={closeDetail}
                       className="absolute top-4 right-4 text-white hover:text-gray-300 
-                               transition-colors p-2 rounded-full hover:bg-white/10 z-10"
+                               transition-colors p-2 rounded-full hover:bg-white/10"
+                      style={{ zIndex: 52 }}
                       aria-label="Close details"
                     >
                       <svg 
