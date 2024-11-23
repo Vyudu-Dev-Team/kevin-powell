@@ -7,17 +7,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 2000px; /* Increased perspective for more dramatic 3D effect */
+  perspective: 2000px;
+  padding: 2rem; /* Add padding to ensure no cropping */
 }
 
 .imageWrapper {
   position: relative;
-  width: min(45%, 1080px); /* Reduced to 45%, max at 1080px for better visibility */
+  width: min(40%, 1080px); /* Reduced width to prevent cropping */
   aspect-ratio: 1920/1080;
   margin: auto;
   will-change: transform;
   transform-style: preserve-3d;
-  transform: scale(0.85); /* Initial scale down to create more space */
+  transform: scale(0.85);
 }
 
 .tiltWrapper {
@@ -116,5 +117,12 @@
   
   .glareEffect {
     display: none;
+  }
+}
+
+/* Ensure image container doesn't overflow on smaller screens */
+@media (max-height: 800px) {
+  .imageWrapper {
+    width: min(35%, 960px); /* Further reduce size on smaller screens */
   }
 }
