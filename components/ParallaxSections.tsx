@@ -1,6 +1,7 @@
 'use client';
 
 import ParallaxSection from './ParallaxSection';
+import PhotoGallery from './PhotoGallery';
 
 export default function ParallaxSections() {
   return (
@@ -12,13 +13,7 @@ export default function ParallaxSections() {
         description="Where storytelling meets visual artistry. Every frame is meticulously crafted to evoke emotion and capture imagination."
         align="left"
       />
-      <ParallaxSection
-        size="medium"
-        imageUrl="https://images.unsplash.com/photo-1533488069324-f9265c15d37e?auto=format&fit=crop&q=80"
-        title="Visual Poetry"
-        description="Transform ordinary moments into extraordinary narratives through the lens of creative innovation."
-        align="right"
-      />
+      <PhotoGallery />
       <ParallaxSection
         size="medium"
         imageUrl="https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?auto=format&fit=crop&q=80"
