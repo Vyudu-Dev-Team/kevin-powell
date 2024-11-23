@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
@@ -13,19 +13,9 @@ interface TeamMember {
   image: string;
 }
 
-interface PopupPosition {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 export default function DirectorSection() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
   const [isGridView, setIsGridView] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true
@@ -166,86 +156,32 @@ Beyond their technical expertise, they are passionate about mentoring the next g
     }
   ];
 
-  const calculatePopupPosition = (clickEvent: React.MouseEvent<HTMLDivElement>, member: TeamMember) => {
-    if (!containerRef.current) return;
+  // Disable body scroll when popup is open
+  useEffect(() => {
+    if (!isGridView) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isGridView]);
 
-    const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
-
-    // Default popup dimensions
-    const popupWidth = Math.min(800, viewportWidth * 0.9);
-    const popupHeight = Math.min(600, viewportHeight * 0.8);
-
-    // Calculate initial position centered on click
-    let x = clickRect.left + (clickRect.width / 2) - (popupWidth / 2);
-    let y = clickRect.top + (clickRect.height / 2) - (popupHeight / 2);
-
-    // Adjust for container scroll position
-    y += containerRef.current.scrollTop;
-
-    // Keep popup within viewport bounds
-    x = Math.max(20, Math.min(x, viewportWidth - popupWidth - 20));
-    y = Math.max(20, Math.min(y, viewportHeight - popupHeight - 20));
-
-    // Ensure popup is within the team section
-    const sectionTop = containerRect.top;
-    const sectionBottom = containerRect.bottom;
-    y = Math.max(sectionTop + 20, Math.min(y, sectionBottom - popupHeight - 20));
-
-    setPopupPosition({
-      x,
-      y,
-      width: popupWidth,
-      height: popupHeight
-    });
-  };
-
-  const handleMemberClick = (member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
-    calculatePopupPosition(event, member);
+  const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);
     setIsGridView(false);
   };
 
   const closeDetail = () => {
     setIsGridView(true);
-    setPopupPosition(null);
     setTimeout(() => setSelectedMember(null), 300);
   };
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (selectedMember && popupRef.current) {
-        const rect = popupRef.current.getBoundingClientRect();
-        calculatePopupPosition(
-          { target: popupRef.current } as unknown as React.MouseEvent<HTMLDivElement>,
-          selectedMember
-        );
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [selectedMember]);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeDetail();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, []);
 
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen bg-black text-white py-20 px-4 md:px-8 overflow-hidden"
+      className="relative min-h-screen bg-black text-white py-20 px-4 md:px-8"
     >
       {/* Section Title with animated line */}
       <motion.div 
@@ -263,7 +199,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
       </motion.div>
 
       {/* Grid/Detail View Container */}
-      <div ref={containerRef} className="relative max-w-8xl mx-auto">
+      <div className="relative max-w-8xl mx-auto">
         <AnimatePresence mode="wait">
           {isGridView ? (
             // Grid View
@@ -272,7 +208,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {teamMembers.map((member, index) => (
@@ -281,7 +217,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  onClick={(e) => handleMemberClick(member, e)}
+                  onClick={() => handleMemberClick(member)}
                   className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
@@ -300,84 +236,83 @@ Beyond their technical expertise, they are passionate about mentoring the next g
               ))}
             </motion.div>
           ) : (
-            // Detail View (Popup)
-            <motion.div
-              ref={popupRef}
-              key="detail"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
-                opacity: 1, 
-                scale: 1,
-                x: popupPosition?.x ?? 0,
-                y: popupPosition?.y ?? 0,
-                width: popupPosition?.width ?? 'auto',
-                height: popupPosition?.height ?? 'auto'
-              }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ 
-                duration: 0.3,
-                type: "spring",
-                stiffness: 300,
-                damping: 30
-              }}
-              style={{
-                position: 'absolute',
-                zIndex: 50,
-                backgroundColor: 'rgba(0, 0, 0, 0.95)',
-                borderRadius: '12px',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-              }}
-              className="overflow-hidden"
-            >
+            // Popup View with Overlay
+            <>
+              {/* Overlay */}
+              <motion.div
+                key="overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9998]"
+                onClick={closeDetail}
+              />
+              
+              {/* Popup */}
               {selectedMember && (
-                <div className="relative w-full h-full flex flex-col md:flex-row items-center p-6 md:p-8">
-                  <motion.div 
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="relative w-full md:w-1/2 aspect-[3/4] md:mr-8 mb-6 md:mb-0"
-                  >
-                    <Image
-                      src={selectedMember.image}
-                      alt={selectedMember.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover rounded-lg"
-                    />
-                  </motion.div>
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="w-full md:w-1/2 overflow-y-auto max-h-[calc(100%-2rem)]"
-                  >
-                    <h2 className="text-3xl md:text-4xl font-bold mb-3">{selectedMember.name}</h2>
-                    <h3 className="text-xl text-gray-400 mb-6">{selectedMember.role}</h3>
-                    <div className="prose prose-sm md:prose-base prose-invert">
-                      <p className="leading-relaxed">{selectedMember.bio}</p>
+                <motion.div
+                  key="popup"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30
+                  }}
+                  className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl 
+                           max-h-[80vh] bg-black/95 rounded-lg overflow-hidden z-[9999] shadow-2xl"
+                >
+                  <div className="relative w-full h-full flex flex-col md:flex-row">
+                    {/* Image Container */}
+                    <div className="w-full md:w-1/2 relative">
+                      <div className="aspect-[3/4] relative">
+                        <Image
+                          src={selectedMember.image}
+                          alt={selectedMember.name}
+                          fill
+                          sizes="(max-width: 768px) 90vw, 40vw"
+                          className="object-cover"
+                          priority
+                        />
+                      </div>
                     </div>
-                  </motion.div>
-                  <button
-                    onClick={closeDetail}
-                    className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
-                  >
-                    <svg 
-                      className="w-6 h-6" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
+
+                    {/* Content Container */}
+                    <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto">
+                      <h2 className="text-2xl md:text-3xl font-bold mb-2">{selectedMember.name}</h2>
+                      <h3 className="text-xl text-gray-400 mb-4">{selectedMember.role}</h3>
+                      <div className="prose prose-sm md:prose-base prose-invert">
+                        <p className="leading-relaxed">{selectedMember.bio}</p>
+                      </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <button
+                      onClick={closeDetail}
+                      className="absolute top-4 right-4 text-white hover:text-gray-300 
+                               transition-colors p-2 rounded-full hover:bg-white/10 z-10"
+                      aria-label="Close details"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M6 18L18 6M6 6l12 12" 
-                      />
-                    </svg>
-                  </button>
-                </div>
+                      <svg 
+                        className="w-6 h-6" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M6 18L18 6M6 6l12 12" 
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </motion.div>
               )}
-            </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>
