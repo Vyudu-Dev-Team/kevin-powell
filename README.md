@@ -177,8 +177,5 @@ Common issues and solutions:
 
 For contributions, please create a pull request with a clear description of your changes.
 
-## License
 
-[Add your license information here]
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/~/github.com/VyuduInc/kevin-powell)
