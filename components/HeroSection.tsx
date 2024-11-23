@@ -1,12 +1,18 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { Canvas } from '@react-three/fiber';
+import { ScrollControls } from '@react-three/drei';
 import styles from '../styles/HeroSection.module.css';
+import HeroCanvas from './HeroCanvas';
+import gsap from 'gsap';
 
 export default function HeroSection() {
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Effect to handle aspect ratio on resize
   useEffect(() => {
@@ -17,24 +23,19 @@ export default function HeroSection() {
       const image = imageRef.current;
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const imageNaturalRatio = 16 / 9; // Assuming a 16:9 image, adjust if different
+      const imageNaturalRatio = 16 / 9;
 
-      // Calculate container dimensions
       let containerWidth = viewportWidth;
       let containerHeight = viewportHeight;
 
-      // Adjust container size to maintain aspect ratio while covering viewport
       const containerRatio = containerWidth / containerHeight;
       
       if (containerRatio > imageNaturalRatio) {
-        // Container is wider than image ratio
         containerHeight = containerWidth / imageNaturalRatio;
       } else {
-        // Container is taller than image ratio
         containerWidth = containerHeight * imageNaturalRatio;
       }
 
-      // Center the container if it's larger than viewport
       const translateX = (viewportWidth - containerWidth) / 2;
       const translateY = (viewportHeight - containerHeight) / 2;
 
@@ -43,16 +44,38 @@ export default function HeroSection() {
       container.style.transform = `translate(${translateX}px, ${translateY}px)`;
     };
 
-    // Initial calculation
     handleResize();
-
-    // Add resize listener
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Effect for initial animations
+  useEffect(() => {
+    if (!isLoaded || !contentRef.current) return;
+
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    tl.from(contentRef.current.children, {
+      y: 100,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.2,
+      delay: 0.5
+    });
+  }, [isLoaded]);
+
   return (
     <section className={styles.heroContainer}>
+      {/* 3D Canvas Background */}
+      <div className={styles.canvasWrapper}>
+        <Canvas>
+          <ScrollControls pages={1} damping={0.3}>
+            <HeroCanvas />
+          </ScrollControls>
+        </Canvas>
+      </div>
+
+      {/* Hero Image */}
       <div ref={containerRef} className={styles.imageWrapper}>
         <Image
           ref={imageRef}
@@ -65,7 +88,18 @@ export default function HeroSection() {
           style={{
             objectFit: 'cover',
           }}
+          onLoad={() => setIsLoaded(true)}
         />
+        <div className={styles.imageOverlay} />
+      </div>
+
+      {/* Hero Content */}
+      <div ref={contentRef} className={styles.content}>
+        <h1>Kevin Powell</h1>
+        <p>Director & Cinematographer</p>
+        <button className={styles.exploreButton}>
+          Explore Work
+        </button>
       </div>
     </section>
   );

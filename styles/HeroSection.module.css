@@ -15,6 +15,91 @@
   will-change: transform;
 }
 
+.canvasWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 2;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 3;
+  width: 90%;
+  max-width: 800px;
+}
+
+.content h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.content p {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.exploreButton {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.exploreButton:hover {
+  background: white;
+  color: black;
+}
+
+.exploreButton::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: transform 0.6s ease;
+}
+
+.exploreButton:hover::before {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.5);
+}
+
 /* Portrait mode adjustments */
 @media (orientation: portrait) {
   .heroContainer {
@@ -44,20 +129,29 @@
 /* Mobile devices */
 @media (max-width: 640px) {
   .heroContainer {
-    height: calc(100vh - 60px); /* Adjust for mobile header */
+    height: calc(100vh - 60px);
+  }
+
+  .content {
+    width: 95%;
+  }
+
+  .exploreButton {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
   }
 }
 
 /* Tablets */
 @media (min-width: 641px) and (max-width: 1024px) {
   .heroContainer {
-    height: calc(100vh - 80px); /* Adjust for tablet header */
+    height: calc(100vh - 80px);
   }
 }
 
 /* Large screens */
 @media (min-width: 1921px) {
   .heroContainer {
-    max-height: 1080px; /* Cap height on very large screens */
+    max-height: 1080px;
   }
 }
