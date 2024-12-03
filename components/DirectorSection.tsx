@@ -291,13 +291,15 @@ const DirectorSection: React.FC = () => {
                 className="group cursor-pointer relative aspect-[3/4] overflow-hidden bg-gray-900"
               >
                 <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
-                <ProgressiveImage
-                  src={member.image}
-                  alt={member.name}
-                  priority={index < 4}
-                  fill
-                  className="absolute inset-0"
-                />
+                <div className="relative w-full h-full">
+                  <ProgressiveImage
+                    src={member.image}
+                    alt={member.name}
+                    priority={index < 4}
+                    fill
+                    className="!absolute inset-0"
+                  />
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
                   <p className="text-lg opacity-80">{member.role}</p>
@@ -319,7 +321,7 @@ const DirectorSection: React.FC = () => {
                   top: popupPosition.y,
                   left: popupPosition.x,
                   width: popupPosition.width,
-                  height: popupPosition.height,
+                  maxHeight: popupPosition.height,
                   zIndex: 1000
                 }}
                 className="bg-black/95 backdrop-blur-lg p-8 rounded-lg shadow-2xl overflow-y-auto"
@@ -345,19 +347,20 @@ const DirectorSection: React.FC = () => {
                 </button>
 
                 <div className="flex flex-col md:flex-row gap-8">
-                  <div className="w-full md:w-1/3">
+                  <div className="w-full md:w-1/3 relative aspect-[3/4]">
                     <ProgressiveImage
                       src={selectedMember.image}
                       alt={selectedMember.name}
                       priority
-                      className="w-full aspect-[2/3] rounded-lg overflow-hidden object-cover"
+                      fill
+                      className="rounded-lg overflow-hidden"
                     />
                   </div>
                   <div className="w-full md:w-2/3">
                     <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
                     <p className="text-xl text-gray-400 mb-4">{selectedMember.role}</p>
                     <div className="prose prose-invert">
-                      <p className="text-lg leading-relaxed">{selectedMember.bio}</p>
+                      <p className="text-lg leading-relaxed whitespace-pre-wrap">{selectedMember.bio}</p>
                     </div>
                   </div>
                 </div>

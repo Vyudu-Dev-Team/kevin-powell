@@ -27,7 +27,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       <Image
         src={src}
         alt={alt}
@@ -36,12 +36,12 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         height={!fill ? height || 1080 : undefined}
         priority={priority}
         quality={quality}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className={`
           duration-700 ease-in-out object-cover
           ${isLoading ? 'scale-110 blur-lg' : 'scale-100 blur-0'}
         `}
         onLoadingComplete={() => setIsLoading(false)}
-        style={{ transform: `scale(${isLoading ? 1.1 : 1})` }}
       />
     </div>
   );
