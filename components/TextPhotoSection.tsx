@@ -5,9 +5,9 @@ import ProgressiveImage from './ProgressiveImage';
 
 export default function TextPhotoSection() {
   return (
-    <section className="min-h-[80vh] grid grid-cols-1 md:grid-cols-2">
+    <section className="min-h-[50vh] grid grid-cols-1 md:grid-cols-2 bg-black">
       <motion.div 
-        className="flex items-center p-8 md:p-16 order-2 md:order-1"
+        className="flex items-center p-8 md:p-12 order-2 md:order-1"
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
@@ -32,16 +32,17 @@ export default function TextPhotoSection() {
         </div>
       </motion.div>
       <motion.div 
-        className="relative h-[70vh] md:h-auto order-1 md:order-2"
+        className="relative h-[40vh] md:h-auto order-1 md:order-2 overflow-hidden"
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.2 }}
       >
         <ProgressiveImage
-          src="/images/sections/cinematic-vision.jpg"
+          src="/images/sections/cinematic-shot.jpg"
           alt="Cinematic vision in action"
           className="w-full h-full object-cover"
           priority
+          fill
         />
       </motion.div>
     </section>
