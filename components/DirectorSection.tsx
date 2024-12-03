@@ -208,25 +208,34 @@ const DirectorSection: React.FC = () => {
     const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
 
-    // Calculate optimal position
-    let x = clickRect.left + window.scrollX;
-    let y = clickRect.top + window.scrollY;
-
-    // Adjust for viewport edges
+    // Calculate popup dimensions
     const popupWidth = Math.min(500, viewport.width * 0.9);
     const popupHeight = Math.min(600, viewport.height * 0.9);
 
-    // Ensure popup stays within viewport
-    if (x + popupWidth > viewport.width) {
-      x = viewport.width - popupWidth - 20;
-    }
-    if (y + popupHeight > viewport.height + window.scrollY) {
-      y = window.scrollY + viewport.height - popupHeight - 20;
+    // Initial position at click point
+    let x = clickRect.left + window.scrollX;
+    let y = clickRect.top + window.scrollY;
+
+    // Center the popup horizontally relative to the clicked element
+    x = x + (clickRect.width / 2) - (popupWidth / 2);
+
+    // Position the popup above or below based on available space
+    const spaceBelow = viewport.height - clickRect.bottom;
+    const spaceAbove = clickRect.top;
+    
+    if (spaceBelow >= popupHeight) {
+      // Enough space below - position popup below the clicked element
+      y = clickRect.bottom + window.scrollY + 20;
+    } else if (spaceAbove >= popupHeight) {
+      // Not enough space below, but enough above - position popup above
+      y = clickRect.top + window.scrollY - popupHeight - 20;
+    } else {
+      // Not enough space above or below - center in viewport
+      y = window.scrollY + (viewport.height - popupHeight) / 2;
     }
 
-    // Ensure minimum margins
-    x = Math.max(20, x);
-    y = Math.max(window.scrollY + 20, y);
+    // Ensure popup stays within viewport horizontally
+    x = Math.max(20, Math.min(x, viewport.width - popupWidth - 20));
 
     return {
       x,
