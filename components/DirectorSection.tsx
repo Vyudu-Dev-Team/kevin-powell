@@ -197,9 +197,10 @@ const DirectorSection: React.FC = () => {
     triggerOnce: true
   });
 
-  const calculatePopupPosition = useCallback((clickEvent: React.MouseEvent<HTMLDivElement>, member: TeamMember) => {
-    if (!containerRef.current) return null;
-
+  const handleMemberClick = useCallback((member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    
+    // Get viewport dimensions
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight
@@ -209,46 +210,30 @@ const DirectorSection: React.FC = () => {
     const popupWidth = Math.min(500, viewport.width * 0.9);
     const popupHeight = Math.min(600, viewport.height * 0.9);
 
-    // Get the click position relative to the viewport
-    const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
-    const clickCenterY = clickRect.top + (clickRect.height / 2);
-
-    // Calculate the ideal scroll position that would center the popup
-    const currentScroll = window.scrollY;
+    // Calculate center position
     const x = (viewport.width - popupWidth) / 2;
-    let y = currentScroll + (viewport.height - popupHeight) / 2;
+    const y = window.scrollY + (viewport.height - popupHeight) / 2;
 
-    // If the click is in the lower half of the viewport, adjust the popup position up slightly
-    if (clickCenterY > viewport.height / 2) {
-      y = currentScroll + (viewport.height - popupHeight) / 3;
-    }
-
-    return {
+    // Set position
+    const newPosition = {
       x,
       y,
       width: popupWidth,
       height: popupHeight
     };
+
+    // Calculate the target scroll position to center the popup in the viewport
+    const targetScrollY = y - (viewport.height - popupHeight) / 2;
+
+    // Smoothly scroll to center the popup
+    window.scrollTo({
+      top: targetScrollY,
+      behavior: 'smooth'
+    });
+
+    setSelectedMember(member);
+    setPopupPosition(newPosition);
   }, []);
-
-  const handleMemberClick = useCallback((member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    const newPosition = calculatePopupPosition(event, member);
-    if (newPosition) {
-      // Calculate the ideal scroll position to center the popup in the viewport
-      const viewportHeight = window.innerHeight;
-      const idealScrollY = newPosition.y - (viewportHeight - newPosition.height) / 2;
-      
-      // Smoothly scroll to the ideal position
-      window.scrollTo({
-        top: idealScrollY,
-        behavior: 'smooth'
-      });
-
-      setSelectedMember(member);
-      setPopupPosition(newPosition);
-    }
-  }, [calculatePopupPosition]);
 
   const closeDetail = useCallback(() => {
     setSelectedMember(null);
