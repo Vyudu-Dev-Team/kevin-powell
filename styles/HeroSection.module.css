@@ -8,26 +8,16 @@
   align-items: center;
   justify-content: center;
   perspective: 2000px;
-  padding: 2rem; /* Add padding to ensure no cropping */
+  padding: 2rem;
 }
 
 .imageWrapper {
   position: relative;
-  width: min(40%, 1080px); /* Reduced width to prevent cropping */
+  width: 90vw;
   aspect-ratio: 1920/1080;
   margin: auto;
   will-change: transform;
   transform-style: preserve-3d;
-  transform: scale(0.85);
-}
-
-.tiltWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: all 0.3s ease-out;
-  will-change: transform, opacity;
 }
 
 .glareEffect {
@@ -42,87 +32,5 @@
     rgba(255, 255, 255, 0.2) 0%,
     transparent 80%
   );
-  opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-.tiltWrapper:hover .glareEffect {
-  opacity: var(--glare-opacity, 0.2);
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-  .tiltWrapper {
-    transform: none !important;
-  }
-  
-  .glareEffect {
-    display: none;
-  }
-}
-
-/* Portrait mode adjustments */
-@media (orientation: portrait) {
-  .heroContainer {
-    height: 100vh;
-  }
-  
-  .imageWrapper {
-    width: 100vw;
-    height: 100%;
-    transform-origin: center center;
-  }
-}
-
-/* Landscape mode adjustments */
-@media (orientation: landscape) {
-  .heroContainer {
-    height: 100vh;
-  }
-  
-  .imageWrapper {
-    width: 100%;
-    height: 100vh;
-    transform-origin: center center;
-  }
-}
-
-/* Mobile devices */
-@media (max-width: 640px) {
-  .heroContainer {
-    height: calc(100vh - 60px); /* Adjust for mobile header */
-  }
-}
-
-/* Tablets */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .heroContainer {
-    height: calc(100vh - 80px); /* Adjust for tablet header */
-  }
-}
-
-/* Large screens */
-@media (min-width: 1921px) {
-  .heroContainer {
-    max-height: 1080px; /* Cap height on very large screens */
-  }
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .tiltWrapper {
-    transition: opacity 0.5s linear;
-    transform: none !important;
-  }
-  
-  .glareEffect {
-    display: none;
-  }
-}
-
-/* Ensure image container doesn't overflow on smaller screens */
-@media (max-height: 800px) {
-  .imageWrapper {
-    width: min(35%, 960px); /* Further reduce size on smaller screens */
-  }
 }

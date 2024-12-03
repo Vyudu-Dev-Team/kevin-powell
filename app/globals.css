@@ -95,14 +95,30 @@
   }
 }
 
-/* Hide scrollbar but keep functionality */
+/* Adicione este novo estilo para a scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 12px;
 }
 
-/* Prevent horizontal scroll */
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 #000000;
+}
+
 body {
   overflow-x: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
