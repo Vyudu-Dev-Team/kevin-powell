@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { TeamMember, PopupPosition } from '../types';
-import { ErrorBoundary } from './ErrorBoundary';
-import { ProgressiveImage } from './ProgressiveImage';
+import ErrorBoundary from './ErrorBoundary';
+import ProgressiveImage from './ProgressiveImage';
 
 interface TeamMember {
   id: number;
@@ -201,147 +201,82 @@ Beyond their technical expertise, they are passionate about mentoring the next g
   }
 ];
 
-export default function DirectorSection() {
+const DirectorSection: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
-
-  const { ref: sectionRef, inView } = useInView({
+  const [popupPosition, setPopupPosition] = useState<PopupPosition>({ x: 0, y: 0, width: 0 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true
   });
 
-  const calculatePopupPosition = useCallback((clickEvent: React.MouseEvent<HTMLDivElement>, member: TeamMember) => {
-    if (!containerRef.current) return null;
-
-    const viewport = {
-      width: window.innerWidth,
-      height: window.innerHeight
-    };
-
-    const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-
-    // Calculate optimal position
-    let x = clickRect.left + window.scrollX;
-    let y = clickRect.top + window.scrollY;
-
-    // Adjust for viewport edges
-    const popupWidth = Math.min(500, viewport.width * 0.9);
-    const popupHeight = Math.min(600, viewport.height * 0.9);
-
-    // Ensure popup stays within viewport
-    if (x + popupWidth > viewport.width) {
-      x = viewport.width - popupWidth - 20;
-    }
-    if (y + popupHeight > viewport.height + window.scrollY) {
-      y = window.scrollY + viewport.height - popupHeight - 20;
-    }
-
-    // Ensure minimum margins
-    x = Math.max(20, x);
-    y = Math.max(window.scrollY + 20, y);
-
-    return {
-      x,
-      y,
-      width: popupWidth,
-      height: popupHeight
-    };
+  const handleMemberClick = useCallback((member: TeamMember, event: React.MouseEvent) => {
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const scrollY = window.scrollY;
+    
+    setSelectedMember(member);
+    setPopupPosition({
+      x: rect.left,
+      y: rect.top + scrollY,
+      width: rect.width
+    });
   }, []);
 
-  const handleMemberClick = useCallback((member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    const newPosition = calculatePopupPosition(event, member);
-    if (newPosition) {
-      setSelectedMember(member);
-      setPopupPosition(newPosition);
-    }
-  }, [calculatePopupPosition]);
-
-  const closeDetail = useCallback(() => {
-    setSelectedMember(null);
-    setPopupPosition(null);
-  }, []);
-
-  // Handle escape key
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeDetail();
+    const handleClickOutside = (event: MouseEvent) => {
+      if (selectedMember && sectionRef.current && !sectionRef.current.contains(event.target as Node)) {
+        setSelectedMember(null);
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [closeDetail]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [selectedMember]);
 
   return (
     <ErrorBoundary>
-      <section
-        ref={sectionRef}
-        className="relative py-24 bg-black text-white overflow-hidden"
-      >
-        <div className="container mx-auto px-4" ref={containerRef}>
+      <section ref={sectionRef} className="relative py-20 bg-black">
+        <div className="container mx-auto px-4">
           <motion.div
+            ref={ref}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">The Team</h2>
-            <p className="text-xl text-gray-400 mb-12 max-w-3xl">
-              Meet our talented team of directors who bring unique perspectives and creativity to every project.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {teamMembers.map((member, index) => (
+            {teamMembers.map((member) => (
               <motion.div
                 key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+                className="relative cursor-pointer"
                 onClick={(e) => handleMemberClick(member, e)}
-                className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
               >
-                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
                 <ProgressiveImage
                   src={member.image}
                   alt={member.name}
-                  priority={index < 4}
-                  className="w-full h-full"
+                  className="w-full h-[400px] object-cover"
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
-                  <p className="text-lg opacity-80">{member.role}</p>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                  <h3 className="text-xl font-semibold text-white">{member.name}</h3>
+                  <p className="text-gray-300">{member.role}</p>
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <AnimatePresence>
-            {selectedMember && popupPosition && (
+            {selectedMember && (
               <motion.div
-                ref={popupRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  position: 'fixed',
-                  top: popupPosition.y,
-                  left: popupPosition.x,
-                  width: popupPosition.width,
-                  height: popupPosition.height,
-                  zIndex: 1000
-                }}
-                className="bg-black/95 backdrop-blur-lg p-6 rounded-lg shadow-2xl overflow-y-auto"
+                transition={{ duration: 0.2 }}
+                className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-4xl bg-black p-8 rounded-lg shadow-2xl z-50"
               >
                 <button
-                  onClick={closeDetail}
-                  className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
-                  aria-label="Close details"
+                  onClick={() => setSelectedMember(null)}
+                  className="absolute top-4 right-4 text-white hover:text-gray-300"
                 >
                   <svg
                     className="w-6 h-6"
@@ -357,22 +292,18 @@ export default function DirectorSection() {
                     />
                   </svg>
                 </button>
-
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="w-full md:w-1/3">
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="md:w-1/3">
                     <ProgressiveImage
                       src={selectedMember.image}
                       alt={selectedMember.name}
-                      priority
-                      className="w-full aspect-[3/4] rounded-lg overflow-hidden"
+                      className="w-full h-[300px] object-cover rounded"
                     />
                   </div>
-                  <div className="w-full md:w-2/3">
-                    <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
-                    <p className="text-xl text-gray-400 mb-4">{selectedMember.role}</p>
-                    <div className="prose prose-invert">
-                      <p className="text-lg leading-relaxed">{selectedMember.bio}</p>
-                    </div>
+                  <div className="md:w-2/3">
+                    <h2 className="text-2xl font-bold mb-2">{selectedMember.name}</h2>
+                    <h3 className="text-xl text-gray-400 mb-4">{selectedMember.role}</h3>
+                    <p className="text-gray-300 leading-relaxed">{selectedMember.bio}</p>
                   </div>
                 </div>
               </motion.div>
@@ -382,4 +313,6 @@ export default function DirectorSection() {
       </section>
     </ErrorBoundary>
   );
-}
+};
+
+export default DirectorSection;

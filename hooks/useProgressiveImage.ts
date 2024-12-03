@@ -1,18 +1,34 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
-export function useProgressiveImage(lowQualitySrc: string, highQualitySrc: string) {
-  const [src, setSrc] = useState(lowQualitySrc);
+interface ProgressiveImageState {
+  isLoading: boolean;
+  blur: boolean;
+}
+
+export const useProgressiveImage = (src: string): ProgressiveImageState => {
+  const [state, setState] = useState<ProgressiveImageState>({
+    isLoading: true,
+    blur: true
+  });
 
   useEffect(() => {
-    setSrc(lowQualitySrc);
+    setState({ isLoading: true, blur: true });
     
     const img = new Image();
-    img.src = highQualitySrc;
+    img.src = src;
     
     img.onload = () => {
-      setSrc(highQualitySrc);
+      setState({ isLoading: false, blur: false });
     };
-  }, [lowQualitySrc, highQualitySrc]);
 
-  return src;
-}
+    return () => {
+      img.onload = null;
+    };
+  }, [src]);
+
+  return state;
+};
+
+export default useProgressiveImage;

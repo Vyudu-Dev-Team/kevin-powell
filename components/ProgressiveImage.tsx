@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { useProgressiveImage } from '../hooks/useProgressiveImage';
 
@@ -14,7 +14,7 @@ interface ProgressiveImageProps {
   quality?: number;
 }
 
-export function ProgressiveImage({
+const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
   alt,
   className = '',
@@ -22,26 +22,35 @@ export function ProgressiveImage({
   height,
   priority = false,
   quality = 75
-}: ProgressiveImageProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const lowQualitySrc = `${src}?w=50&q=10`;
-  const finalSrc = useProgressiveImage(lowQualitySrc, src);
+}) => {
+  const { isLoading, blur } = useProgressiveImage(src);
+  const [isError, setIsError] = useState(false);
+
+  if (isError) {
+    return (
+      <div className={`bg-gray-200 ${className}`}>
+        <div className="flex items-center justify-center h-full">
+          <span className="text-gray-500">Image not available</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       <Image
-        src={finalSrc}
+        src={src}
         alt={alt}
-        width={width}
-        height={height}
-        quality={quality}
+        width={width || 1920}
+        height={height || 1080}
+        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        style={{ filter: blur ? 'blur(20px)' : 'none' }}
         priority={priority}
-        className={`
-          duration-700 ease-in-out
-          ${isLoading ? 'scale-110 blur-lg' : 'scale-100 blur-0'}
-        `}
-        onLoadingComplete={() => setIsLoading(false)}
+        quality={quality}
+        onError={() => setIsError(true)}
       />
     </div>
   );
-}
+};
+
+export default ProgressiveImage;
