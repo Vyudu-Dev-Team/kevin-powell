@@ -205,37 +205,13 @@ const DirectorSection: React.FC = () => {
       height: window.innerHeight
     };
 
-    const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-
     // Calculate popup dimensions
     const popupWidth = Math.min(500, viewport.width * 0.9);
     const popupHeight = Math.min(600, viewport.height * 0.9);
 
-    // Initial position at click point
-    let x = clickRect.left + window.scrollX;
-    let y = clickRect.top + window.scrollY;
-
-    // Center the popup horizontally relative to the clicked element
-    x = x + (clickRect.width / 2) - (popupWidth / 2);
-
-    // Position the popup above or below based on available space
-    const spaceBelow = viewport.height - clickRect.bottom;
-    const spaceAbove = clickRect.top;
-    
-    if (spaceBelow >= popupHeight) {
-      // Enough space below - position popup below the clicked element
-      y = clickRect.bottom + window.scrollY + 20;
-    } else if (spaceAbove >= popupHeight) {
-      // Not enough space below, but enough above - position popup above
-      y = clickRect.top + window.scrollY - popupHeight - 20;
-    } else {
-      // Not enough space above or below - center in viewport
-      y = window.scrollY + (viewport.height - popupHeight) / 2;
-    }
-
-    // Ensure popup stays within viewport horizontally
-    x = Math.max(20, Math.min(x, viewport.width - popupWidth - 20));
+    // Center the popup in the viewport
+    const x = window.scrollX + (viewport.width - popupWidth) / 2;
+    const y = window.scrollY + (viewport.height - popupHeight) / 2;
 
     return {
       x,
@@ -319,63 +295,72 @@ const DirectorSection: React.FC = () => {
 
           <AnimatePresence>
             {selectedMember && popupPosition && (
-              <motion.div
-                ref={popupRef}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  position: 'fixed',
-                  top: popupPosition.y,
-                  left: popupPosition.x,
-                  width: popupPosition.width,
-                  maxHeight: popupPosition.height,
-                  zIndex: 1000
-                }}
-                className="bg-black/95 backdrop-blur-lg p-8 rounded-lg shadow-2xl overflow-y-auto"
-              >
-                <button
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                   onClick={closeDetail}
-                  className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
-                  aria-label="Close details"
+                />
+                <motion.div
+                  ref={popupRef}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    position: 'fixed',
+                    top: popupPosition.y,
+                    left: popupPosition.x,
+                    width: popupPosition.width,
+                    maxHeight: popupPosition.height,
+                    zIndex: 50
+                  }}
+                  className="bg-black/95 backdrop-blur-lg p-8 rounded-lg shadow-2xl overflow-y-auto"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <button
+                    onClick={closeDetail}
+                    className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+                    aria-label="Close details"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-
-                <div className="flex flex-col md:flex-row gap-8">
-                  <div className="w-full md:w-1/3">
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
-                      <ProgressiveImage
-                        src={selectedMember.image}
-                        alt={selectedMember.name}
-                        priority
-                        fill
-                        className="!absolute inset-0"
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
                       />
+                    </svg>
+                  </button>
+
+                  <div className="flex flex-col md:flex-row gap-8">
+                    <div className="w-full md:w-1/3">
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+                        <ProgressiveImage
+                          src={selectedMember.image}
+                          alt={selectedMember.name}
+                          priority
+                          fill
+                          className="!absolute inset-0"
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full md:w-2/3">
+                      <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
+                      <p className="text-xl text-gray-400 mb-4">{selectedMember.role}</p>
+                      <div className="prose prose-invert">
+                        <p className="text-lg leading-relaxed whitespace-pre-wrap">{selectedMember.bio}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="w-full md:w-2/3">
-                    <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
-                    <p className="text-xl text-gray-400 mb-4">{selectedMember.role}</p>
-                    <div className="prose prose-invert">
-                      <p className="text-lg leading-relaxed whitespace-pre-wrap">{selectedMember.bio}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>
