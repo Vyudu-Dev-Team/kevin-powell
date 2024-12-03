@@ -2,33 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
-interface ProgressiveImageState {
-  isLoading: boolean;
-  blur: boolean;
-}
-
-export const useProgressiveImage = (src: string): ProgressiveImageState => {
-  const [state, setState] = useState<ProgressiveImageState>({
-    isLoading: true,
-    blur: true
-  });
+export const useProgressiveImage = (src: string): string => {
+  const [currentSrc, setCurrentSrc] = useState(src);
 
   useEffect(() => {
-    setState({ isLoading: true, blur: true });
-    
-    const img = new Image();
-    img.src = src;
-    
-    img.onload = () => {
-      setState({ isLoading: false, blur: false });
-    };
-
-    return () => {
-      img.onload = null;
-    };
+    setCurrentSrc(src);
   }, [src]);
 
-  return state;
+  return currentSrc;
 };
 
 export default useProgressiveImage;

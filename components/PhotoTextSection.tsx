@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import ProgressiveImage from './ProgressiveImage';
 
 export default function PhotoTextSection() {
   return (
@@ -12,11 +12,11 @@ export default function PhotoTextSection() {
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
       >
-        <Image
-          src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80"
-          alt="Cinematic scene"
-          fill
-          className="object-cover"
+        <ProgressiveImage
+          src="/images/sections/cinematic-shot.jpg"
+          alt="Dramatic cinematic shot from the film"
+          className="object-cover h-full"
+          priority
         />
       </motion.div>
       <motion.div 
