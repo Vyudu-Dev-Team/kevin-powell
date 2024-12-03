@@ -106,7 +106,7 @@ Beyond their technical expertise, they are passionate about mentoring the next g
       name: "Lisa \"Cynical\" Smith",
       role: "Director",
       bio: dummyBio,
-      image: encodeURI('/images/team/Lisa "Cynical" Smith.jpg')
+      image: "/images/team/Lisa Cynical Smith.jpg"
     },
     {
       id: 11,
