@@ -347,14 +347,16 @@ const DirectorSection: React.FC = () => {
                 </button>
 
                 <div className="flex flex-col md:flex-row gap-8">
-                  <div className="w-full md:w-1/3 relative aspect-[3/4]">
-                    <ProgressiveImage
-                      src={selectedMember.image}
-                      alt={selectedMember.name}
-                      priority
-                      fill
-                      className="rounded-lg overflow-hidden"
-                    />
+                  <div className="w-full md:w-1/3">
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+                      <ProgressiveImage
+                        src={selectedMember.image}
+                        alt={selectedMember.name}
+                        priority
+                        fill
+                        className="!absolute inset-0"
+                      />
+                    </div>
                   </div>
                   <div className="w-full md:w-2/3">
                     <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
