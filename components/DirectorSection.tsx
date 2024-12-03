@@ -288,15 +288,17 @@ const DirectorSection: React.FC = () => {
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={(e) => handleMemberClick(member, e)}
-                className="group cursor-pointer relative aspect-[2/3] overflow-hidden"
+                className="group cursor-pointer relative aspect-[3/4] overflow-hidden bg-gray-900"
               >
                 <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
-                <ProgressiveImage
-                  src={member.image}
-                  alt={member.name}
-                  priority={index < 4}
-                  className="w-full h-full object-cover"
-                />
+                <div className="relative w-full h-full">
+                  <ProgressiveImage
+                    src={member.image}
+                    alt={member.name}
+                    priority={index < 4}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                  />
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
                   <p className="text-lg opacity-80">{member.role}</p>
