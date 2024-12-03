@@ -216,7 +216,7 @@ const DirectorSection: React.FC = () => {
     // Calculate the ideal scroll position that would center the popup
     const currentScroll = window.scrollY;
     const x = (viewport.width - popupWidth) / 2;
-    const y = currentScroll + (viewport.height - popupHeight) / 2;
+    let y = currentScroll + (viewport.height - popupHeight) / 2;
 
     // If the click is in the lower half of the viewport, adjust the popup position up slightly
     if (clickCenterY > viewport.height / 2) {
