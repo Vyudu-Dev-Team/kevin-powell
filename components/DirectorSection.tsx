@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
@@ -152,69 +152,75 @@ Beyond their technical expertise, they are passionate about mentoring the next g
     }
   ];
 
-  const calculatePopupPosition = (clickEvent: React.MouseEvent<HTMLDivElement>, member: TeamMember) => {
-    if (!containerRef.current) return;
+  // Cleanup function for event listeners
+  useEffect(() => {
+    const cleanup = () => {
+      if (selectedMember) {
+        setSelectedMember(null);
+        setPopupPosition(null);
+      }
+    };
+
+    window.addEventListener('resize', cleanup);
+    return () => {
+      window.removeEventListener('resize', cleanup);
+    };
+  }, [selectedMember]);
+
+  const calculatePopupPosition = useCallback((clickEvent: React.MouseEvent<HTMLDivElement>, member: TeamMember) => {
+    if (!containerRef.current) return null;
+
+    const viewport = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
 
     const clickRect = (clickEvent.target as HTMLElement).getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
 
-    // Default popup dimensions
-    const popupWidth = Math.min(800, viewportWidth * 0.9);
-    const popupHeight = Math.min(600, viewportHeight * 0.8);
+    // Calculate optimal position
+    let x = clickRect.left + window.scrollX;
+    let y = clickRect.top + window.scrollY;
 
-    // Calculate initial position centered on click
-    let x = clickRect.left + (clickRect.width / 2) - (popupWidth / 2);
-    let y = clickRect.top + (clickRect.height / 2) - (popupHeight / 2);
+    // Adjust for viewport edges
+    const popupWidth = Math.min(500, viewport.width * 0.9);
+    const popupHeight = Math.min(600, viewport.height * 0.9);
 
-    // Adjust for container scroll position
-    y += containerRef.current.scrollTop;
+    // Ensure popup stays within viewport
+    if (x + popupWidth > viewport.width) {
+      x = viewport.width - popupWidth - 20;
+    }
+    if (y + popupHeight > viewport.height + window.scrollY) {
+      y = window.scrollY + viewport.height - popupHeight - 20;
+    }
 
-    // Keep popup within viewport bounds
-    x = Math.max(20, Math.min(x, viewportWidth - popupWidth - 20));
-    y = Math.max(20, Math.min(y, viewportHeight - popupHeight - 20));
+    // Ensure minimum margins
+    x = Math.max(20, x);
+    y = Math.max(window.scrollY + 20, y);
 
-    // Ensure popup is within the team section
-    const sectionTop = containerRect.top;
-    const sectionBottom = containerRect.bottom;
-    y = Math.max(sectionTop + 20, Math.min(y, sectionBottom - popupHeight - 20));
-
-    setPopupPosition({
+    return {
       x,
       y,
       width: popupWidth,
       height: popupHeight
-    });
-  };
+    };
+  }, []);
 
-  const handleMemberClick = (member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
-    calculatePopupPosition(event, member);
-    setSelectedMember(member);
-    setIsGridView(false);
-  };
+  const handleMemberClick = useCallback((member: TeamMember, event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    const newPosition = calculatePopupPosition(event, member);
+    if (newPosition) {
+      setSelectedMember(member);
+      setPopupPosition(newPosition);
+      setIsGridView(false);
+    }
+  }, [calculatePopupPosition]);
 
   const closeDetail = () => {
     setIsGridView(true);
     setPopupPosition(null);
     setTimeout(() => setSelectedMember(null), 300);
   };
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (selectedMember && popupRef.current) {
-        const rect = popupRef.current.getBoundingClientRect();
-        calculatePopupPosition(
-          { target: popupRef.current } as unknown as React.MouseEvent<HTMLDivElement>,
-          selectedMember
-        );
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [selectedMember]);
 
   // Handle escape key
   useEffect(() => {
@@ -271,13 +277,18 @@ Beyond their technical expertise, they are passionate about mentoring the next g
                   className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      priority={index < 6}
+                      loading={index < 6 ? 'eager' : 'lazy'}
+                      quality={75}
+                    />
+                  </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
                     <p className="text-lg opacity-80">{member.role}</p>
