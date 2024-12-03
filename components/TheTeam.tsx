@@ -26,24 +26,45 @@ export default function TheTeam() {
   const teamMembers: TeamMember[] = [
     {
       id: 1,
-      name: "Christopher Nolan",
+      name: "Adelin Gasana",
       role: "Director",
       image: "/images/team/Adelin Gasana.jpg",
-      bio: "Christopher Nolan é um diretor de cinema britânico-americano conhecido por seus filmes complexos e inovadores."
+      bio: "An accomplished director with a unique vision for storytelling."
     },
     {
       id: 2,
-      name: "Emma Thomas",
-      role: "Producer",
-      image: "/images/team/emma.jpg",
-      bio: "Emma Thomas é uma produtora de cinema britânica e parceira frequente de Christopher Nolan."
+      name: "Annie Byrd",
+      role: "Director",
+      image: "/images/team/Annie Byrd.jpg",
+      bio: "A visionary director known for innovative storytelling approaches."
     },
     {
       id: 3,
-      name: "Hoyte van Hoytema",
-      role: "Cinematographer",
-      image: "/images/team/hoyte.jpg",
-      bio: "Hoyte van Hoytema é um diretor de fotografia sueco-holandês conhecido por seu trabalho distinto."
+      name: "Ari Raskin",
+      role: "Director",
+      image: "/images/team/Ari Raskin.jpg",
+      bio: "A creative force bringing fresh perspectives to every project."
+    },
+    {
+      id: 4,
+      name: "Bryan Johnson",
+      role: "Director",
+      image: "/images/team/Bryan Johnson.jpg",
+      bio: "An experienced director with a passion for compelling narratives."
+    },
+    {
+      id: 5,
+      name: "Chuck Collins",
+      role: "Director",
+      image: "/images/team/Chuck Collins.jpg",
+      bio: "A talented director known for powerful visual storytelling."
+    },
+    {
+      id: 6,
+      name: "Dr. Maurice Stinnett",
+      role: "Director",
+      image: "/images/team/Dr. Maurice Stinnett.jpg",
+      bio: "A distinguished director bringing academic insight to filmmaking."
     }
   ];
 

@@ -40,129 +40,115 @@ Beyond their technical expertise, they are passionate about mentoring the next g
   const teamMembers: TeamMember[] = [
     {
       id: 1,
-      name: "Alex Rivera",
+      name: "Adelin Gasana",
       role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Adelin Gasana.jpg"
     },
     {
       id: 2,
-      name: "Sarah Chen",
-      role: "Cinematographer",
+      name: "Annie Byrd",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Annie Byrd.jpg"
     },
     {
       id: 3,
-      name: "Marcus Thompson",
-      role: "Production Designer",
+      name: "Ari Raskin",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Ari Raskin.jpg"
     },
     {
       id: 4,
-      name: "Elena Rodriguez",
-      role: "Editor",
+      name: "Bryan Johnson",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Bryan Johnson.jpg"
     },
     {
       id: 5,
-      name: "James Wilson",
-      role: "Sound Designer",
+      name: "Chuck Collins",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Chuck Collins.jpg"
     },
     {
       id: 6,
-      name: "Mia Zhang",
-      role: "Visual Effects Supervisor",
+      name: "Dr. Maurice Stinnett",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Dr. Maurice Stinnett.jpg"
     },
     {
       id: 7,
-      name: "David Patel",
-      role: "Stunt Coordinator",
+      name: "Evangeline Lawson",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Evangeline Lawson.jpg"
     },
     {
       id: 8,
-      name: "Sophie Laurent",
-      role: "Costume Designer",
+      name: "JP Cummings",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/JP Cummings.jpg"
     },
     {
       id: 9,
-      name: "Michael Chang",
-      role: "Art Director",
+      name: "Justin Herman",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Justin Herman.jpg"
     },
     {
       id: 10,
-      name: "Isabella Santos",
-      role: "Makeup Artist",
+      name: "Lisa \"Cynical\" Smith",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Lisa \"Cynical\" Smith.jpg"
     },
     {
       id: 11,
-      name: "Thomas Anderson",
-      role: "Lighting Director",
+      name: "Marc Byers",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Marc Byers.jpg"
     },
     {
       id: 12,
-      name: "Nina Patel",
-      role: "Script Supervisor",
+      name: "Natatcha Ikoli",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Natatcha Ikoli.jpg"
     },
     {
       id: 13,
-      name: "Robert Kim",
-      role: "Location Manager",
+      name: "Patrick Flynn",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Patrick Flynn.jpg"
     },
     {
       id: 14,
-      name: "Emma Mitchell",
-      role: "Production Manager",
+      name: "Radcliffe Bailey",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1558898479-33c0057a5d12?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Radcliffe Bailey.jpg"
     },
     {
       id: 15,
-      name: "Carlos Ruiz",
-      role: "Sound Mixer",
+      name: "Regan Richardson",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Regan Richardson.jpg"
     },
     {
       id: 16,
-      name: "Anna Kowalski",
-      role: "Set Decorator",
+      name: "Vidal Davis",
+      role: "Director",
       bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1557296387-5358ad7997bb?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 17,
-      name: "Lucas Silva",
-      role: "Camera Operator",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=800&auto=format&fit=crop&q=60"
-    },
-    {
-      id: 18,
-      name: "Grace Liu",
-      role: "Choreographer",
-      bio: dummyBio,
-      image: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=800&auto=format&fit=crop&q=60"
+      image: "/images/team/Vidal Davis.jpg"
     }
   ];
 
