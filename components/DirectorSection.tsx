@@ -265,21 +265,22 @@ const DirectorSection: React.FC = () => {
     <ErrorBoundary>
       <section
         ref={sectionRef}
-        className="relative py-24 bg-black text-white overflow-hidden"
+        className="relative py-24 bg-black text-white"
       >
         <div className="container mx-auto px-4" ref={containerRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
             transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">The Team</h2>
-            <p className="text-xl text-gray-400 mb-12 max-w-3xl">
+            <h2 className="text-5xl md:text-7xl font-bold mb-6">The Team</h2>
+            <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto">
               Meet our talented team of directors who bring unique perspectives and creativity to every project.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {teamMembers.map((member, index) => (
               <motion.div
                 key={member.id}
@@ -287,7 +288,7 @@ const DirectorSection: React.FC = () => {
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={(e) => handleMemberClick(member, e)}
-                className="group cursor-pointer relative aspect-[3/4] overflow-hidden"
+                className="group cursor-pointer relative aspect-[2/3] overflow-hidden"
               >
                 <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300 z-10" />
                 <ProgressiveImage
@@ -320,7 +321,7 @@ const DirectorSection: React.FC = () => {
                   height: popupPosition.height,
                   zIndex: 1000
                 }}
-                className="bg-black/95 backdrop-blur-lg p-6 rounded-lg shadow-2xl overflow-y-auto"
+                className="bg-black/95 backdrop-blur-lg p-8 rounded-lg shadow-2xl overflow-y-auto"
               >
                 <button
                   onClick={closeDetail}
@@ -342,13 +343,13 @@ const DirectorSection: React.FC = () => {
                   </svg>
                 </button>
 
-                <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex flex-col md:flex-row gap-8">
                   <div className="w-full md:w-1/3">
                     <ProgressiveImage
                       src={selectedMember.image}
                       alt={selectedMember.name}
                       priority
-                      className="w-full aspect-[3/4] rounded-lg overflow-hidden"
+                      className="w-full aspect-[2/3] rounded-lg overflow-hidden object-cover"
                     />
                   </div>
                   <div className="w-full md:w-2/3">

@@ -5,17 +5,17 @@ import ProgressiveImage from './ProgressiveImage';
 
 export default function PhotoTextSection() {
   return (
-    <section className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <section className="min-h-[80vh] grid grid-cols-1 md:grid-cols-2">
       <motion.div 
-        className="relative h-[70vh] md:h-screen"
+        className="relative h-[70vh] md:h-auto"
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
       >
         <ProgressiveImage
-          src="/images/sections/cinematic-shot.jpg"
-          alt="Dramatic cinematic shot from the film"
-          className="object-cover h-full"
+          src="/images/sections/artistic-direction.jpg"
+          alt="Artistic direction in filmmaking"
+          className="w-full h-full object-cover"
           priority
         />
       </motion.div>
@@ -26,16 +26,22 @@ export default function PhotoTextSection() {
         transition={{ duration: 1, delay: 0.2 }}
       >
         <div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">Visual Storytelling</h2>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">Artistic Direction</h2>
           <p className="text-lg md:text-xl opacity-80 leading-relaxed mb-8">
-            We create compelling narratives that captivate audiences and drive results.
-            Our approach combines cinematic artistry with strategic thinking to deliver
-            messages that resonate and inspire action.
+            Every frame tells a story. Our artistic direction combines innovative
+            techniques with timeless storytelling principles to create unforgettable
+            cinematic experiences.
           </p>
-          <a href="#work" className="nav-link text-lg inline-flex items-center gap-2">
-            View Our Work
-            <span className="transform transition-transform group-hover:translate-x-1">→</span>
-          </a>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm opacity-60 mb-1">APPROACH</p>
+              <p>Visual Innovation • Creative Direction • Artistic Excellence</p>
+            </div>
+            <div>
+              <p className="text-sm opacity-60 mb-1">IMPACT</p>
+              <p>Transforming Stories into Visual Masterpieces</p>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>
