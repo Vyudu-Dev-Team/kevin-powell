@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
-export function ScrollProgress() {
+const ScrollProgress = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -29,4 +29,6 @@ export function ScrollProgress() {
       style={{ scaleX }}
     />
   );
-}
+};
+
+export default ScrollProgress;
