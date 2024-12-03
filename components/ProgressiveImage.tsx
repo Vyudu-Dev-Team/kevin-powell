@@ -11,6 +11,7 @@ interface ProgressiveImageProps {
   height?: number;
   priority?: boolean;
   quality?: number;
+  fill?: boolean;
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
@@ -20,7 +21,8 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   width,
   height,
   priority = false,
-  quality = 75
+  quality = 75,
+  fill = false
 }) => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,12 +31,13 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       <Image
         src={src}
         alt={alt}
-        width={width || 1920}
-        height={height || 1080}
+        fill={fill}
+        width={!fill ? width || 1920 : undefined}
+        height={!fill ? height || 1080 : undefined}
         priority={priority}
         quality={quality}
         className={`
-          duration-700 ease-in-out
+          duration-700 ease-in-out object-cover
           ${isLoading ? 'scale-110 blur-lg' : 'scale-100 blur-0'}
         `}
         onLoadingComplete={() => setIsLoading(false)}
