@@ -2,6 +2,8 @@ import './globals.css';
 import { Playfair_Display } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
 import CustomCursor from '@/components/CustomCursor';
+import ScrollProgress from '@/components/ScrollProgress';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import type { Metadata, Viewport } from 'next';
 
 const playfair = Playfair_Display({ 
@@ -41,10 +43,13 @@ export default function RootLayout({
           MozOsxFontSmoothing: 'grayscale',
         }}
       >
-        <SmoothScroll>
-          {children}
-          <CustomCursor />
-        </SmoothScroll>
+        <ErrorBoundary>
+          <SmoothScroll>
+            <ScrollProgress />
+            {children}
+            <CustomCursor />
+          </SmoothScroll>
+        </ErrorBoundary>
       </body>
     </html>
   );

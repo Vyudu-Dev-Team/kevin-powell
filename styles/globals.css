@@ -13,6 +13,7 @@ html {
   height: 100%;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 80px; /* Matches the height of the fixed header */
 }
 
 body {
@@ -35,6 +36,18 @@ body {
   backface-visibility: hidden;
 }
 
+/* Navigation styles */
+.nav-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.3s ease-in-out;
+}
+
 /* Optimize animations */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -42,6 +55,12 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-scroll {
+    scroll-behavior: smooth;
   }
 }
 
@@ -60,4 +79,11 @@ body {
   object-fit: cover !important;
   position: relative !important;
   height: unset !important;
+}
+
+/* Performance optimizations */
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }

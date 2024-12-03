@@ -1,22 +1,49 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
 
-  // Handle scroll effect
+  // Optimized scroll handler with throttling
+  const handleScroll = useCallback(() => {
+    const currentScrollPos = window.scrollY;
+    
+    // Show/hide based on scroll direction
+    setVisible(
+      (prevScrollPos > currentScrollPos) || // Scrolling up
+      currentScrollPos < 10 || // At top
+      isMobileMenuOpen // Menu is open
+    );
+    
+    // Update background opacity based on scroll position
+    setIsScrolled(currentScrollPos > 50);
+    
+    setPrevScrollPos(currentScrollPos);
+  }, [prevScrollPos, isMobileMenuOpen]);
+
+  // Optimized scroll listener
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    let ticking = false;
+    
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [handleScroll]);
 
   const menuItems = [
     { href: '#story', label: 'Story' },
@@ -26,10 +53,36 @@ export default function Navigation() {
     { href: '#contact', label: 'Contact' },
   ];
 
+  const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (!href) return;
+    
+    const element = document.querySelector(href);
+    if (element) {
+      const offset = 80; // Height of fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled ? 'bg-black/90 backdrop-blur-md py-4' : 'bg-transparent py-6'
+    <motion.nav 
+      initial={{ y: 0 }}
+      animate={{ 
+        y: visible ? 0 : -100,
+        opacity: visible ? 1 : 0
+      }}
+      transition={{ duration: 0.3 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-black/90 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-6'
       }`}
     >
       <div className="container mx-auto px-4">
@@ -37,7 +90,7 @@ export default function Navigation() {
           {/* Logo */}
           <Link 
             href="/"
-            className="text-white text-2xl font-bold"
+            className="text-white text-2xl font-bold relative z-50"
           >
             KP
           </Link>
@@ -48,6 +101,7 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={handleMenuClick}
                 className="text-white hover:text-gray-300 transition-colors duration-200"
               >
                 {item.label}
@@ -57,42 +111,51 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white p-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden relative z-50 p-2"
             aria-label="Toggle menu"
           >
-            <div className="w-6 h-0.5 bg-white mb-1.5 transition-all duration-200" />
-            <div className="w-6 h-0.5 bg-white mb-1.5 transition-all duration-200" />
-            <div className="w-6 h-0.5 bg-white transition-all duration-200" />
+            <div className="w-6 h-6 flex items-center justify-center relative">
+              <span
+                className={`transform transition-all duration-300 absolute block h-0.5 w-5 bg-white ${
+                  isMobileMenuOpen ? 'rotate-45 translate-y-0' : '-translate-y-1.5'
+                }`}
+              />
+              <span
+                className={`transform transition-all duration-300 absolute block h-0.5 w-5 bg-white ${
+                  isMobileMenuOpen ? '-rotate-45 translate-y-0' : 'translate-y-1.5'
+                }`}
+              />
+            </div>
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-4"
-            >
-              <div className="flex flex-col space-y-4">
-                {menuItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="text-white hover:text-gray-300 transition-colors duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/95 backdrop-blur-lg z-40 md:hidden"
+          >
+            <div className="flex flex-col items-center justify-center h-full space-y-8">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={handleMenuClick}
+                  className="text-white text-2xl hover:text-gray-300 transition-colors duration-200"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }
