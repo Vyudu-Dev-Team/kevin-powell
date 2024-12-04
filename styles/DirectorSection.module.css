@@ -98,4 +98,36 @@
 
 .closeButton:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+.modalContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 980px;
+  max-height: 538px;
+  z-index: 50;
+  transform: translate(-50%, -50%) !important;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(16px);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: rgba(255, 255, 255, 0.3) 1px 1px 65px;
+  overflow-y: auto;
+  
+}
+
+@media (max-width: 1024px) {
+  .modalContent {
+    width: 90vw;
+    max-height: 80vh;
+  }
 } 

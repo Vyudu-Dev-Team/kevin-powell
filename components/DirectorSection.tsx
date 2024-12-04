@@ -6,6 +6,7 @@ import { useInView } from 'react-intersection-observer';
 import { TeamMember, PopupPosition } from '../types';
 import ErrorBoundary from './ErrorBoundary';
 import ProgressiveImage from './ProgressiveImage';
+import styles from '../styles/DirectorSection.module.css';
 
 const teamMembers: TeamMember[] = [
   {
@@ -305,7 +306,7 @@ const DirectorSection: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                  className={styles.modalOverlay}
                   onClick={closeDetail}
                 />
                 <motion.div
@@ -314,15 +315,7 @@ const DirectorSection: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
-                  style={{
-                    position: 'fixed',
-                    top: popupPosition.y,
-                    left: popupPosition.x,
-                    width: popupPosition.width,
-                    maxHeight: popupPosition.height,
-                    zIndex: 50
-                  }}
-                  className="bg-black/95 backdrop-blur-lg p-8 rounded-lg shadow-2xl overflow-y-auto"
+                  className={styles.modalContent}
                 >
                   <button
                     onClick={closeDetail}
