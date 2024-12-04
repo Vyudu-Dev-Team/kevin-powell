@@ -1,23 +1,32 @@
 .heroContainer {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: fit-content;
   overflow: hidden;
   background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;
   perspective: 2000px;
-  padding: 2rem;
+  margin-top: 38px;
+  transform: scale(0.9);
+  cursor: pointer;
 }
 
 .imageWrapper {
   position: relative;
   width: 90vw;
-  aspect-ratio: 1920/1080;
+  aspect-ratio: 16/9;
   margin: auto;
   will-change: transform;
   transform-style: preserve-3d;
+  
+}
+
+.imgWrapper img {
+  width: 100%;
+  height: 80%;
+  object-fit: contain;
 }
 
 .glareEffect {
