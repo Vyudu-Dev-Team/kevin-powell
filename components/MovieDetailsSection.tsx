@@ -87,7 +87,7 @@ export default function MovieDetailsSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left Content */}
-          <div className="flex-1">
+          <div className="flex-1 pl-[35px]">
             <div className="mb-24 text-center lg:text-left">
               <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white to-gray-400 text-transparent bg-clip-text mb-6">
                 When We Free The World
