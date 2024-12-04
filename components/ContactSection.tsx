@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function ContactSection() {
   return (
-    <section className="min-h-screen bg-neutral-900 py-24 px-8">
+    <section id="connect" className="relative bg-black text-white py-24">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}

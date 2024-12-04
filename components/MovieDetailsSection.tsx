@@ -69,8 +69,8 @@ export default function MovieDetailsSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-screen bg-black text-white py-20 overflow-hidden will-change-transform"
-      id="story"
+      className="relative min-h-screen bg-black text-white py-24 overflow-hidden will-change-transform"
+      id="overview"
     >
       {/* Artistic Background Elements */}
       <div className="absolute inset-0 overflow-hidden opacity-[0.03]">

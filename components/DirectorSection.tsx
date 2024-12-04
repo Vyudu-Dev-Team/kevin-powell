@@ -255,6 +255,7 @@ const DirectorSection: React.FC = () => {
   return (
     <ErrorBoundary>
       <section
+        id="directors"
         ref={sectionRef}
         className="relative py-24 bg-black text-white"
       >

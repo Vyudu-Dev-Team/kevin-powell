@@ -32,7 +32,7 @@ export default function BehindScenes() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
   return (
-    <section ref={containerRef} className="relative py-24 bg-black overflow-hidden">
+    <section id="music" ref={containerRef} className="relative py-24 bg-black overflow-hidden">
       <motion.div 
         className="max-w-7xl mx-auto px-8"
         style={{ y }}

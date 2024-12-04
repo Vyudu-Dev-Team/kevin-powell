@@ -136,7 +136,7 @@ export default function TheTeam() {
   };
 
   return (
-    <section className={styles.teamSection}>
+    <section id="cast" className={styles.teamSection}>
       <div className={styles.titleContainer}>
         <h2 className="text-4xl md:text-6xl font-bold mb-4">Nossa Equipe</h2>
         <div className={styles.titleUnderline} />
