@@ -16,7 +16,7 @@ export default function Navigation() {
     
     // Show/hide based on scroll direction
     setVisible(
-      (prevScrollPos > currentScrollPos) || // Scrolling up
+      (currentScrollPos < prevScrollPos) || // Scrolling up
       currentScrollPos < 10 || // At top
       isMobileMenuOpen // Menu is open
     );
