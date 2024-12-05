@@ -8,24 +8,16 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [visible, setVisible] = useState(true);
 
   // Optimized scroll handler with throttling
   const handleScroll = useCallback(() => {
     const currentScrollPos = window.scrollY;
     
-    // Show/hide based on scroll direction
-    setVisible(
-      (currentScrollPos < prevScrollPos) || // Scrolling up
-      currentScrollPos < 10 || // At top
-      isMobileMenuOpen // Menu is open
-    );
-    
     // Update background opacity based on scroll position
     setIsScrolled(currentScrollPos > 50);
     
     setPrevScrollPos(currentScrollPos);
-  }, [prevScrollPos, isMobileMenuOpen]);
+  }, []);
 
   // Optimized scroll listener
   useEffect(() => {
@@ -79,11 +71,11 @@ export default function Navigation() {
     <motion.nav 
       initial={{ y: 0 }}
       animate={{ 
-        y: visible ? 0 : -100,
-        opacity: visible ? 1 : 0
+        y: 0,
+        opacity: 1
       }}
       transition={{ duration: 0.3 }}
-      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 w-full z-[9999] transition-all duration-300 ${
         isScrolled 
           ? 'bg-black/90 backdrop-blur-md shadow-lg py-4 border-b border-white/10' 
           : 'bg-transparent py-6'
