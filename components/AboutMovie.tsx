@@ -16,7 +16,7 @@ export default function AboutMovie() {
   return (
     <section 
       ref={containerRef} 
-      className="relative py-24 overflow-hidden"
+      className="relative py-12 md:py-16 overflow-hidden"
     >
       {/* Background Image with Parallax */}
       <motion.div 

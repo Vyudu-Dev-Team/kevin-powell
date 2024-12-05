@@ -70,7 +70,7 @@ export default function MovieDetailsSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-screen bg-black text-white py-24 overflow-hidden will-change-transform"
+      className="relative bg-black text-white py-16 md:py-20 overflow-hidden will-change-transform"
       id="overview"
     >
       {/* Artistic Background Elements */}
@@ -88,7 +88,7 @@ export default function MovieDetailsSection() {
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left Content */}
           <div className="flex-1 pl-[35px]">
-            <div className="mb-24 text-center lg:text-left">
+            <div className="mb-12 lg:mb-16 text-center lg:text-left">
               <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white to-gray-400 text-transparent bg-clip-text mb-6">
                 When We Free The World
               </h1>
