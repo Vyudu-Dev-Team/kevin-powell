@@ -38,9 +38,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         quality={quality}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className={`
-          duration-700 ease-in-out object-cover
-          ${isLoading ? 'scale-110 blur-lg' : 'scale-100 blur-0'}
+          will-change-transform
+          duration-500 ease-out
+          ${isLoading ? 'scale-105 blur-md' : 'scale-100 blur-0'}
         `}
+        style={{
+          transform: isLoading ? 'scale(1.05)' : 'scale(1)',
+          transition: 'transform 0.5s ease-out, filter 0.5s ease-out'
+        }}
         onLoadingComplete={() => setIsLoading(false)}
       />
     </div>
