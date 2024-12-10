@@ -10,7 +10,11 @@ export default function PhotoTextSection() {
         className="relative h-[70vh] md:h-auto"
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
+        viewport={{ once: true, margin: "-20%" }}
+        transition={{ 
+          duration: 0.6,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
       >
         <ProgressiveImage
           src="/images/sections/artistic-direction.jpg"
@@ -23,7 +27,12 @@ export default function PhotoTextSection() {
         className="flex items-center p-8 md:p-16"
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.2 }}
+        viewport={{ once: true, margin: "-20%" }}
+        transition={{ 
+          duration: 0.6,
+          delay: 0.1,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
       >
         <div>
           <h2 className="text-4xl md:text-6xl font-bold mb-6">Artistic Direction</h2>

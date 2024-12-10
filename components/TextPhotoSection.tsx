@@ -7,10 +7,14 @@ export default function TextPhotoSection() {
   return (
     <section className="min-h-[50vh] grid grid-cols-1 md:grid-cols-2 bg-black">
       <motion.div 
-        className="flex items-center p-8 md:p-12 order-2 md:order-1"
+        className="flex items-center p-8 md:p-16 order-2 md:order-1"
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
+        viewport={{ once: true, margin: "-20%" }}
+        transition={{ 
+          duration: 0.6,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
       >
         <div>
           <h2 className="text-4xl md:text-6xl font-bold mb-6">Cinematic Vision</h2>
@@ -32,10 +36,15 @@ export default function TextPhotoSection() {
         </div>
       </motion.div>
       <motion.div 
-        className="relative h-[40vh] md:h-auto order-1 md:order-2 overflow-hidden"
+        className="relative h-[70vh] md:h-auto order-1 md:order-2 overflow-hidden"
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.2 }}
+        viewport={{ once: true, margin: "-20%" }}
+        transition={{ 
+          duration: 0.6,
+          delay: 0.1,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
       >
         <ProgressiveImage
           src="/images/sections/cinematic-shot.jpg"
