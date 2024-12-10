@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
+import ProgressiveImage from './ProgressiveImage';
 import styles from '../styles/TheTeam.module.css';
 
 interface TeamMember {
@@ -142,25 +143,32 @@ export default function TheTeam() {
         <div className={styles.titleUnderline} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+      <div className={styles.memberGrid}>
         {teamMembers.map((member, index) => (
           <motion.div
             key={member.id}
             className={styles.memberCard}
-            onClick={() => setSelectedMember(member)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{
+              duration: 0.5,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
+            onClick={() => setSelectedMember(member)}
           >
             <div className={styles.memberCardImage}>
-              <Image
+              <ProgressiveImage
                 src={member.image}
                 alt={member.name}
+                className="object-cover"
                 fill
-                className="object-cover rounded-lg"
+                quality={85}
+                sizes="(max-width: 768px) 50vw, 33vw"
+                priority={member.id <= 4}
               />
             </div>
-            <h3 className="text-xl font-bold mt-4">{member.name}</h3>
+            <h3 className="text-xl font-semibold mt-4">{member.name}</h3>
             <p className="text-gray-400">{member.role}</p>
           </motion.div>
         ))}

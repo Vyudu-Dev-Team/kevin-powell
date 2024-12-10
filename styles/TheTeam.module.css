@@ -18,9 +18,26 @@
   margin: 0 auto;
 }
 
+.memberGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+  contain: content;
+  content-visibility: auto;
+}
+
+@media (min-width: 768px) {
+  .memberGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .memberCard {
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .memberCard:hover {
@@ -30,9 +47,28 @@
 .memberCardImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1;
+  padding-bottom: 100%; /* Creates a perfect square */
   overflow: hidden;
   border-radius: 0.5rem;
+  background-color: #111;
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.memberCardImage > div {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.memberCardImage img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .popupOverlay {
