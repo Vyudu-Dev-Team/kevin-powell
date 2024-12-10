@@ -143,30 +143,6 @@
   scrollbar-color: #333333 #000000;
 }
 
-/* Performance optimizations for sections */
-section {
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000;
-  -webkit-perspective: 1000;
-}
-
-/* Optimize large image sections */
-.min-h-[80vh],
-.min-h-[50vh] {
-  contain: content;
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 5000px;
-}
-
-/* Optimize motion */
-@media (prefers-reduced-motion: no-preference) {
-  .smooth-scroll-section {
-    transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-}
-
 /* Preserve animations but optimize for reduced motion if user prefers */
 @media (prefers-reduced-motion: reduce) {
   * {
