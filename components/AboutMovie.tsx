@@ -55,7 +55,15 @@ export default function AboutMovie() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            "When We Free The World" is a groundbreaking documentary that explores the complex dynamics of Black manhood in contemporary society. Through intimate conversations and powerful storytelling, the film challenges conventional narratives while offering a fresh perspective on masculinity, identity, and freedom.
+            In When We Free The World, Kevin Powell and Evangeline Lawson interview Black males from young to old about a simple but truly complex question: what is a man? To answer this, we view the lens of everyday individuals – young Black men, older Black men, transgender Black men, mentally challenged Black men, gay Black men – who seek to look within their own personal experiences.
+          </motion.p>
+          <motion.p 
+            className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            The conversations may be triggering to some viewers. But the conversations are beautiful and necessary, because they go into detail about different words, phrases, experiences, and influences that contribute to Black manhood. This film is meant to inspire and educate people who don't understand the complexities of being a Black man in America, no matter their backgrounds, education levels, religions, or otherwise.
           </motion.p>
           <motion.p 
             className="text-lg md:text-xl text-gray-300 leading-relaxed"
@@ -63,7 +71,7 @@ export default function AboutMovie() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Directed by Kevin Powell and produced alongside Evangeline Lawson, this film brings together diverse voices to create a compelling narrative that resonates with audiences worldwide.
+            This film isn't a film centered specifically around stereotypes, but centered around how we as individuals break out of those same stereotypes that society gives us. Please watch the film with an open mind and an open heart.
           </motion.p>
         </motion.div>
       </div>
