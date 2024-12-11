@@ -1,108 +1,79 @@
 import { Photo } from '@/types/gallery';
 
 export const photos: Photo[] = [
+  // Main Collection
   {
     id: 'main-1',
-    src: '/images/gallery/main/1.webp',
+    src: '/images/males/main/1.webp',
     alt: 'Main collection photo 1',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
+    title: 'The Journey Begins',
+    caption: 'A powerful moment that sets the tone for our exploration of masculinity',
     category: 'main'
   },
   {
     id: 'main-2',
-    src: '/images/gallery/main/2.webp',
+    src: '/images/males/main/2.webp',
     alt: 'Main collection photo 2',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
+    title: 'Strength in Vulnerability',
+    caption: 'Capturing the raw emotion and authenticity of our subjects',
     category: 'main'
   },
   {
     id: 'main-3',
-    src: '/images/gallery/main/3.webp',
+    src: '/images/males/main/3.webp',
     alt: 'Main collection photo 3',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
+    title: 'Breaking Barriers',
+    caption: 'Challenging traditional notions of masculinity through honest dialogue',
     category: 'main'
   },
+  // Contemporary Collection
   {
-    id: 'main-4',
-    src: '/images/gallery/main/4.webp',
-    alt: 'Main collection photo 4',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
+    id: 'contemporary-1',
+    src: '/images/males/contemporary/1.webp',
+    alt: 'Contemporary collection photo 1',
+    title: 'Modern Perspectives',
+    caption: 'Today\'s men sharing their experiences and insights',
+    category: 'contemporary'
   },
   {
-    id: 'main-5',
-    src: '/images/gallery/main/5.webp',
-    alt: 'Main collection photo 5',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
+    id: 'contemporary-2',
+    src: '/images/males/contemporary/2.webp',
+    alt: 'Contemporary collection photo 2',
+    title: 'Redefining Roles',
+    caption: 'Exploring how modern men navigate societal expectations',
+    category: 'contemporary'
   },
   {
-    id: 'main-6',
-    src: '/images/gallery/main/6.webp',
-    alt: 'Main collection photo 6',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
+    id: 'contemporary-3',
+    src: '/images/males/contemporary/3.webp',
+    alt: 'Contemporary collection photo 3',
+    title: 'Community and Connection',
+    caption: 'Building bridges through shared experiences',
+    category: 'contemporary'
+  },
+  // Archival Collection
+  {
+    id: 'archival-1',
+    src: '/images/males/archival/1.webp',
+    alt: 'Archival collection photo 1',
+    title: 'Historical Context',
+    caption: 'Understanding the roots of masculine identity',
+    category: 'archival'
   },
   {
-    id: 'main-7',
-    src: '/images/gallery/main/7.webp',
-    alt: 'Main collection photo 7',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
+    id: 'archival-2',
+    src: '/images/males/archival/2.webp',
+    alt: 'Archival collection photo 2',
+    title: 'Generational Wisdom',
+    caption: 'Learning from the experiences of those who came before',
+    category: 'archival'
   },
   {
-    id: 'main-8',
-    src: '/images/gallery/main/8.webp',
-    alt: 'Main collection photo 8',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
-  },
-  {
-    id: 'main-9',
-    src: '/images/gallery/main/9.webp',
-    alt: 'Main collection photo 9',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
-  },
-  {
-    id: 'main-10',
-    src: '/images/gallery/main/10.webp',
-    alt: 'Main collection photo 10',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
-  },
-  {
-    id: 'main-11',
-    src: '/images/gallery/main/11.webp',
-    alt: 'Main collection photo 11',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
-  },
-  {
-    id: 'main-12',
-    src: '/images/gallery/main/12.webp',
-    alt: 'Main collection photo 12',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
-  },
-  {
-    id: 'main-13',
-    src: '/images/gallery/main/13.webp',
-    alt: 'Main collection photo 13',
-    title: 'Exploring perspectives on manhood, identity, and community',
-    caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main'
+    id: 'archival-3',
+    src: '/images/males/archival/3.webp',
+    alt: 'Archival collection photo 3',
+    title: 'Legacy and Evolution',
+    caption: 'Tracing the journey of masculine identity through time',
+    category: 'archival'
   }
 ];

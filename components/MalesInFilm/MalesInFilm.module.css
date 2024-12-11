@@ -11,10 +11,23 @@
   border-radius: 0.5rem;
   background: transparent;
   transition: transform 0.3s ease;
+  cursor: pointer;
+  aspect-ratio: 3/4;
 }
 
 .photoCard:hover {
   transform: scale(1.02);
+}
+
+.photoCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.photoCard:hover img {
+  transform: scale(1.05);
 }
 
 .photoOverlay {
@@ -98,7 +111,7 @@
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.7);
-  padding: 1rem;
+  padding: 1.5rem;
   transform: translateY(100%);
   transition: transform 0.3s ease;
 }
@@ -111,7 +124,9 @@
   width: 100%;
   height: 2px;
   background: rgba(255, 255, 255, 0.2);
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  border-radius: 1px;
+  overflow: hidden;
 }
 
 .progressFill {
@@ -123,6 +138,16 @@
 @media (min-width: 768px) {
   .galleryGrid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: 2rem;
+  }
+
+  .navigationButton {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .closeButton {
+    width: 4rem;
+    height: 4rem;
   }
 }
