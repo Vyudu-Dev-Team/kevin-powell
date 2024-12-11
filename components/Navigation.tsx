@@ -45,6 +45,7 @@ export default function Navigation() {
     { href: '#resources', label: 'Resources' },
     { href: '#screenings', label: 'Screenings' },
     { href: '#connect', label: 'Connect' },
+    { href: '#males-in-film', label: 'The Males in the Film' },
   ];
 
   const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -92,18 +93,19 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <ul className="hidden md:flex items-center gap-8">
             {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleMenuClick}
-                className="text-white hover:text-gray-300 transition-colors duration-200"
-              >
-                {item.label}
-              </Link>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={handleMenuClick}
+                  className="text-white hover:text-gray-300 transition-colors duration-200"
+                >
+                  {item.label}
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
 
           {/* Mobile Menu Button */}
           <button

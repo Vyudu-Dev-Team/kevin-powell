@@ -1,5 +1,6 @@
 import './globals.css';
 import { Playfair_Display } from 'next/font/google';
+import { Providers } from './providers';
 import SmoothScroll from '@/components/SmoothScroll';
 import CustomCursor from '@/components/CustomCursor';
 import ScrollProgress from '@/components/ScrollProgress';
@@ -21,7 +22,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'When We Free The World',
-  description: 'A Film by Kevin Powell',
+  description: 'A powerful documentary exploring Black manhood',
 };
 
 export default function RootLayout({
@@ -46,7 +47,9 @@ export default function RootLayout({
         <ErrorBoundary>
           <SmoothScroll>
             <ScrollProgress />
-            {children}
+            <Providers>
+              {children}
+            </Providers>
             <CustomCursor />
           </SmoothScroll>
         </ErrorBoundary>
