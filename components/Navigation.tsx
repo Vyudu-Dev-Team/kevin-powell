@@ -39,13 +39,10 @@ export default function Navigation() {
 
   const menuItems = [
     { href: '#overview', label: 'Overview' },
-    { href: '#directors', label: 'Directors' },
-    { href: '#cast', label: 'Cast' },
-    { href: '#music', label: 'Music' },
-    { href: '#resources', label: 'Resources' },
-    { href: '#screenings', label: 'Screenings' },
-    { href: '#connect', label: 'Connect' },
+    { href: '#about', label: 'About' },
+    { href: '#director', label: 'Director' },
     { href: '#males-in-film', label: 'The Males in the Film' },
+    { href: '#contact', label: 'Contact' }
   ];
 
   const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

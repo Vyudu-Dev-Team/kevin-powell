@@ -5,7 +5,6 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import MovieDetailsSection from '@/components/MovieDetailsSection';
 import AboutMovie from '@/components/AboutMovie';
-import TheTeam from '@/components/TheTeam';
 import MalesInFilm from '@/components/MalesInFilm';
 
 export default function Home() {
@@ -16,7 +15,6 @@ export default function Home() {
       <MovieDetailsSection />
       <AboutMovie />
       <DirectorSection />
-      <TheTeam />
       <MalesInFilm />
       <ContactSection />
       <Footer />
