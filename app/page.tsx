@@ -1,12 +1,11 @@
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
-import ParallaxSections from '@/components/ParallaxSections';
 import DirectorSection from '@/components/DirectorSection';
-import BehindScenes from '@/components/BehindScenes';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import MovieDetailsSection from '@/components/MovieDetailsSection';
 import AboutMovie from '@/components/AboutMovie';
+import PhotoGallery from '@/components/PhotoGallery';
 
 export default function Home() {
   return (
@@ -16,8 +15,7 @@ export default function Home() {
       <MovieDetailsSection />
       <AboutMovie />
       <DirectorSection />
-      <ParallaxSections />
-      <BehindScenes />
+      <PhotoGallery />
       <ContactSection />
       <Footer />
     </main>
