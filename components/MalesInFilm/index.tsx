@@ -1,241 +1,162 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Card,
-  CardBody,
-  Image,
-  Tab,
-  Tabs,
-  Modal,
-  ModalContent,
-  ModalBody,
-  useDisclosure,
-  Button,
-  Chip,
-  Progress,
-} from '@nextui-org/react';
-import { ChevronLeft, ChevronRight, X, Info } from 'lucide-react';
-import { Photo, GallerySection } from '@/types/gallery';
-import { galleryData } from './gallery-data';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { Modal } from '@nextui-org/react';
+import { IoClose } from 'react-icons/io5';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import styles from './MalesInFilm.module.css';
+import { galleryData } from './gallery-data';
 
 export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [showInfo, setShowInfo] = useState(false);
 
-  const handlePhotoClick = (photo: Photo, index: number) => {
-    setSelectedPhoto(photo);
-    setPhotoIndex(index);
-    onOpen();
-  };
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (selectedPhoto === null) return;
 
-  const handleNext = () => {
-    if (!selectedPhoto) return;
-    const currentSection = galleryData.find(section => section.category === selectedPhoto.category);
+    const currentSection = galleryData.find(section => section.category === selectedCategory);
     if (!currentSection) return;
-    
-    const nextIndex = (photoIndex + 1) % currentSection.photos.length;
-    setPhotoIndex(nextIndex);
-    setSelectedPhoto(currentSection.photos[nextIndex]);
-  };
 
-  const handlePrevious = () => {
-    if (!selectedPhoto) return;
-    const currentSection = galleryData.find(section => section.category === selectedPhoto.category);
-    if (!currentSection) return;
-    
-    const previousIndex = photoIndex === 0 ? currentSection.photos.length - 1 : photoIndex - 1;
-    setPhotoIndex(previousIndex);
-    setSelectedPhoto(currentSection.photos[previousIndex]);
-  };
+    switch (e.key) {
+      case 'ArrowLeft':
+        setSelectedPhoto((prev) => (prev === null || prev === 0 ? currentSection.photos.length - 1 : prev - 1));
+        break;
+      case 'ArrowRight':
+        setSelectedPhoto((prev) => (prev === null ? 0 : (prev + 1) % currentSection.photos.length));
+        break;
+      case 'Escape':
+        setSelectedPhoto(null);
+        setShowInfo(false);
+        break;
+      case 'i':
+        setShowInfo((prev) => !prev);
+        break;
+    }
+  }, [selectedPhoto, selectedCategory]);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrevious();
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'i') setShowInfo(!showInfo);
-    };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, handleNext, handlePrevious, showInfo]);
-
-  const currentSection = galleryData.find(section => section.category === selectedCategory);
+  }, [handleKeyDown]);
 
   return (
-    <section className="py-20 bg-black min-h-screen" id="males-in-film">
-      <div className="max-w-7xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">The Males in the Film</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Journey through the powerful stories and perspectives shared by the men in our documentary.
-          </p>
-        </motion.div>
-
-        <Tabs
-          selectedKey={selectedCategory}
-          onSelectionChange={setSelectedCategory}
-          color="primary"
-          variant="underlined"
-          classNames={{
-            tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-            cursor: "w-full bg-primary",
-            tab: "max-w-fit px-0 h-12",
-            tabContent: "group-data-[selected=true]:text-primary"
-          }}
-        >
+    <section id="males-in-film" className="py-16 bg-black">
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center mb-8 text-white">The Males in the Film</h2>
+        <p className="text-gray-300 text-center mb-12 max-w-2xl mx-auto">
+          Explore our gallery showcasing the talented male actors who brought depth and authenticity to our film.
+          Each photograph captures a moment that contributed to the story's emotional resonance.
+        </p>
+        
+        <div className={styles.galleryGrid}>
           {galleryData.map((section) => (
-            <Tab
-              key={section.category}
-              title={
-                <div className="flex flex-col gap-2">
-                  <span>{section.title}</span>
-                  <span className="text-xs text-gray-400">{section.photos.length} Photos</span>
-                </div>
-              }
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-400 mt-4 mb-8 text-center">{section.description}</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {section.photos.map((photo, index) => (
-                    <motion.div
-                      key={photo.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Card
-                        isPressable
-                        onPress={() => handlePhotoClick(photo, index)}
-                        className="bg-transparent"
-                      >
-                        <CardBody className="p-0 overflow-hidden">
-                          <div className="group relative">
-                            <Image
-                              alt={photo.alt}
-                              className="object-cover w-full aspect-[3/4]"
-                              src={photo.src}
-                              classNames={{
-                                img: "transition-transform duration-300 group-hover:scale-105"
-                              }}
-                            />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300">
-                              <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <p className="text-sm">{photo.caption}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </CardBody>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </Tab>
-          ))}
-        </Tabs>
-      </div>
-
-      <Modal 
-        isOpen={isOpen} 
-        onClose={() => {
-          onClose();
-          setShowInfo(false);
-        }}
-        size="full"
-        classNames={{
-          wrapper: "bg-black/90",
-          body: "p-0",
-        }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <ModalBody>
-              <div className="relative w-full h-[90vh] flex items-center justify-center">
-                {selectedPhoto && (
-                  <>
-                    <Button
-                      isIconOnly
-                      variant="light"
-                      onPress={handlePrevious}
-                      className="absolute left-4 text-white"
-                    >
-                      <ChevronLeft size={24} />
-                    </Button>
-                    <div className="relative">
-                      <Image
-                        alt={selectedPhoto.alt}
-                        src={selectedPhoto.src}
-                        className="max-h-[80vh] max-w-full object-contain"
-                      />
-                      <AnimatePresence>
-                        {showInfo && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            className="absolute bottom-0 left-0 right-0 p-4 bg-black/70 text-white"
-                          >
-                            <p className="text-lg mb-2">{selectedPhoto.caption}</p>
-                            <Progress 
-                              value={(photoIndex + 1) * 100 / currentSection!.photos.length}
-                              className="mt-2"
-                              size="sm"
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+            <div key={section.category}>
+              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
+              <div className={styles.photoGrid}>
+                {section.photos.map((photo, index) => (
+                  <div
+                    key={photo.id}
+                    className={styles.photoCard}
+                    onClick={() => {
+                      setSelectedCategory(section.category);
+                      setSelectedPhoto(index);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      width={400}
+                      height={600}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className={styles.photoOverlay}>
+                      <h3 className="text-white font-semibold">{photo.title}</h3>
+                      <p className="text-gray-200 text-sm">{photo.caption}</p>
                     </div>
-                    <Button
-                      isIconOnly
-                      variant="light"
-                      onPress={handleNext}
-                      className="absolute right-4 text-white"
-                    >
-                      <ChevronRight size={24} />
-                    </Button>
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <Button
-                        isIconOnly
-                        variant="light"
-                        onPress={() => setShowInfo(!showInfo)}
-                        className="text-white"
-                      >
-                        <Info size={24} />
-                      </Button>
-                      <Button
-                        isIconOnly
-                        variant="light"
-                        onPress={onClose}
-                        className="text-white"
-                      >
-                        <X size={24} />
-                      </Button>
-                    </div>
-                  </>
-                )}
+                  </div>
+                ))}
               </div>
-            </ModalBody>
-          )}
-        </ModalContent>
-      </Modal>
+            </div>
+          ))}
+        </div>
+
+        <Modal 
+          isOpen={selectedPhoto !== null}
+          onClose={() => {
+            setSelectedPhoto(null);
+            setShowInfo(false);
+          }}
+          className="bg-black"
+          size="full"
+          hideCloseButton
+        >
+          <div className={`${styles.modalContent} ${showInfo ? styles.showInfo : ''}`}>
+            {selectedPhoto !== null && (
+              <>
+                <button
+                  className={styles.closeButton}
+                  onClick={() => {
+                    setSelectedPhoto(null);
+                    setShowInfo(false);
+                  }}
+                  aria-label="Close modal"
+                >
+                  <IoClose size={24} color="white" />
+                </button>
+
+                <button
+                  className={`${styles.navigationButton} ${styles.prevButton}`}
+                  onClick={() => {
+                    const currentSection = galleryData.find(section => section.category === selectedCategory);
+                    if (!currentSection) return;
+                    setSelectedPhoto(prev => prev === 0 ? currentSection.photos.length - 1 : prev - 1);
+                  }}
+                  aria-label="Previous photo"
+                >
+                  <IoIosArrowBack size={24} color="white" />
+                </button>
+
+                <Image
+                  src={galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].src}
+                  alt={galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].alt}
+                  width={1200}
+                  height={800}
+                  className="max-h-[90vh] w-auto h-auto object-contain"
+                />
+
+                <button
+                  className={`${styles.navigationButton} ${styles.nextButton}`}
+                  onClick={() => {
+                    const currentSection = galleryData.find(section => section.category === selectedCategory);
+                    if (!currentSection) return;
+                    setSelectedPhoto(prev => (prev + 1) % currentSection.photos.length);
+                  }}
+                  aria-label="Next photo"
+                >
+                  <IoIosArrowForward size={24} color="white" />
+                </button>
+
+                <div className={styles.infoOverlay}>
+                  <h3 className="text-white text-xl font-semibold mb-2">
+                    {galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].title}
+                  </h3>
+                  <p className="text-gray-200">
+                    {galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].caption}
+                  </p>
+                  <div className={styles.progressBar}>
+                    <div
+                      className={styles.progressFill}
+                      style={{ width: `${((selectedPhoto + 1) / galleryData.find(section => section.category === selectedCategory)?.photos.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </Modal>
+      </div>
     </section>
   );
 }

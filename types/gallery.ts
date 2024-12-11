@@ -2,15 +2,14 @@ export interface Photo {
   id: string;
   src: string;
   alt: string;
-  category: 'main' | 'contemporary' | 'archival';
-  width: number;
-  height: number;
+  title: string;
   caption: string;
+  category: string;
 }
 
 export interface GallerySection {
+  category: string;
   title: string;
   description: string;
-  category: 'main' | 'contemporary' | 'archival';
   photos: Photo[];
 }
