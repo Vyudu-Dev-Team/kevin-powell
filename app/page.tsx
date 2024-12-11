@@ -5,7 +5,8 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import MovieDetailsSection from '@/components/MovieDetailsSection';
 import AboutMovie from '@/components/AboutMovie';
-import PhotoGallery from '@/components/PhotoGallery';
+import TheTeam from '@/components/TheTeam';
+import MalesInFilm from '@/components/MalesInFilm';
 
 export default function Home() {
   return (
@@ -15,7 +16,8 @@ export default function Home() {
       <MovieDetailsSection />
       <AboutMovie />
       <DirectorSection />
-      <PhotoGallery />
+      <TheTeam />
+      <MalesInFilm />
       <ContactSection />
       <Footer />
     </main>

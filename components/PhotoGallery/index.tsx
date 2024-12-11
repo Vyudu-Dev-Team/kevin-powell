@@ -19,7 +19,7 @@ import { Photo, GallerySection } from '@/types/gallery';
 import { galleryData } from './gallery-data';
 import styles from './PhotoGallery.module.css';
 
-export default function PhotoGallery() {
+export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +50,7 @@ export default function PhotoGallery() {
   };
 
   return (
-    <section className="py-20 bg-black min-h-screen" id="gallery">
+    <section className="py-20 bg-black min-h-screen" id="males-in-film">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,9 +58,9 @@ export default function PhotoGallery() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Photo Gallery</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">The Males in the Film</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Explore our collection of powerful images that capture the essence of Black manhood and its diverse expressions.
+            Explore the powerful stories and perspectives of the men who shared their experiences and insights in our documentary.
           </p>
         </motion.div>
 
