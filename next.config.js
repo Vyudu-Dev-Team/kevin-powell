@@ -22,12 +22,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   webpack: (config) => {
-    config.module.rules.push({
-      test: /\.(vert|frag)$/,
-      use: 'raw-loader',
-    });
+    config.resolve.fallback = { fs: false, path: false };
     return config;
-  },
+  }
 };
 
 module.exports = nextConfig;

@@ -7,9 +7,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 1',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-2',
@@ -17,9 +15,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 2',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-3',
@@ -27,9 +23,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 3',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-4',
@@ -37,9 +31,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 4',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-5',
@@ -47,9 +39,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 5',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-6',
@@ -57,9 +47,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 6',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-7',
@@ -67,9 +55,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 7',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-8',
@@ -77,9 +63,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 8',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-9',
@@ -87,9 +71,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 9',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-10',
@@ -97,9 +79,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 10',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-11',
@@ -107,9 +87,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 11',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-12',
@@ -117,9 +95,7 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 12',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
+    category: 'main'
   },
   {
     id: 'main-13',
@@ -127,124 +103,6 @@ export const photos: Photo[] = [
     alt: 'Main collection photo 13',
     title: 'Exploring perspectives on manhood, identity, and community',
     caption: 'Exploring perspectives on manhood, identity, and community',
-    category: 'main',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-1',
-    src: '/images/gallery/contemporary/1.webp',
-    alt: 'Contemporary collection photo 1',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-2',
-    src: '/images/gallery/contemporary/2.webp',
-    alt: 'Contemporary collection photo 2',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-3',
-    src: '/images/gallery/contemporary/3.webp',
-    alt: 'Contemporary collection photo 3',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-4',
-    src: '/images/gallery/contemporary/4.webp',
-    alt: 'Contemporary collection photo 4',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-5',
-    src: '/images/gallery/contemporary/5.webp',
-    alt: 'Contemporary collection photo 5',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-6',
-    src: '/images/gallery/contemporary/6.webp',
-    alt: 'Contemporary collection photo 6',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-7',
-    src: '/images/gallery/contemporary/7.webp',
-    alt: 'Contemporary collection photo 7',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-8',
-    src: '/images/gallery/contemporary/8.webp',
-    alt: 'Contemporary collection photo 8',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-9',
-    src: '/images/gallery/contemporary/9.webp',
-    alt: 'Contemporary collection photo 9',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-10',
-    src: '/images/gallery/contemporary/10.webp',
-    alt: 'Contemporary collection photo 10',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-11',
-    src: '/images/gallery/contemporary/11.webp',
-    alt: 'Contemporary collection photo 11',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
-    width: 1200,
-    height: 1600,
-  },
-  {
-    id: 'contemporary-12',
-    src: '/images/gallery/contemporary/12.webp',
-    alt: 'Contemporary collection photo 12',
-    title: 'Present-day stories and experiences',
-    caption: 'Present-day stories and experiences',
-    category: 'contemporary',
+    category: 'main'
+  }
+];
