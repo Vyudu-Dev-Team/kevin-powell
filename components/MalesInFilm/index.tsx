@@ -1,28 +1,26 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Modal } from '@nextui-org/react';
 import { IoClose } from 'react-icons/io5';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import styles from './MalesInFilm.module.css';
-import { galleryData } from './gallery-data';
+import { photos } from './gallery-data';
 
 export default function MalesInFilm() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('main');
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [showInfo, setShowInfo] = useState(false);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (selectedPhoto === null) return;
 
-    const currentSection = galleryData.find(section => section.category === selectedCategory);
-    if (!currentSection) return;
-
     switch (e.key) {
       case 'ArrowLeft':
-        setSelectedPhoto((prev) => (prev === null || prev === 0 ? currentSection.photos.length - 1 : prev - 1));
+        setSelectedPhoto((prev) => (prev === null || prev === 0 ? photos.length - 1 : prev - 1));
         break;
       case 'ArrowRight':
-        setSelectedPhoto((prev) => (prev === null ? 0 : (prev + 1) % currentSection.photos.length));
+        setSelectedPhoto((prev) => (prev === null ? 0 : (prev + 1) % photos.length));
         break;
       case 'Escape':
         setSelectedPhoto(null);
@@ -32,7 +30,7 @@ export default function MalesInFilm() {
         setShowInfo((prev) => !prev);
         break;
     }
-  }, [selectedPhoto, selectedCategory]);
+  }, [selectedPhoto]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -49,34 +47,24 @@ export default function MalesInFilm() {
         </p>
         
         <div className={styles.galleryGrid}>
-          {galleryData.map((section) => (
-            <div key={section.category}>
-              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
-              <div className={styles.photoGrid}>
-                {section.photos.map((photo, index) => (
-                  <div
-                    key={photo.id}
-                    className={styles.photoCard}
-                    onClick={() => {
-                      setSelectedCategory(section.category);
-                      setSelectedPhoto(index);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      width={400}
-                      height={600}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className={styles.photoOverlay}>
-                      <h3 className="text-white font-semibold">{photo.title}</h3>
-                      <p className="text-gray-200 text-sm">{photo.caption}</p>
-                    </div>
-                  </div>
-                ))}
+          {photos.map((photo, index) => (
+            <div
+              key={photo.id}
+              className={styles.photoCard}
+              onClick={() => setSelectedPhoto(index)}
+              role="button"
+              tabIndex={0}
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                width={400}
+                height={600}
+                className="w-full h-full object-cover"
+              />
+              <div className={styles.photoOverlay}>
+                <h3 className="text-white font-semibold">{photo.title}</h3>
+                <p className="text-gray-200 text-sm">{photo.caption}</p>
               </div>
             </div>
           ))}
@@ -108,19 +96,15 @@ export default function MalesInFilm() {
 
                 <button
                   className={`${styles.navigationButton} ${styles.prevButton}`}
-                  onClick={() => {
-                    const currentSection = galleryData.find(section => section.category === selectedCategory);
-                    if (!currentSection) return;
-                    setSelectedPhoto(prev => prev === 0 ? currentSection.photos.length - 1 : prev - 1);
-                  }}
+                  onClick={() => setSelectedPhoto(prev => prev === 0 ? photos.length - 1 : prev - 1)}
                   aria-label="Previous photo"
                 >
                   <IoIosArrowBack size={24} color="white" />
                 </button>
 
                 <Image
-                  src={galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].src}
-                  alt={galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].alt}
+                  src={photos[selectedPhoto].src}
+                  alt={photos[selectedPhoto].alt}
                   width={1200}
                   height={800}
                   className="max-h-[90vh] w-auto h-auto object-contain"
@@ -128,11 +112,7 @@ export default function MalesInFilm() {
 
                 <button
                   className={`${styles.navigationButton} ${styles.nextButton}`}
-                  onClick={() => {
-                    const currentSection = galleryData.find(section => section.category === selectedCategory);
-                    if (!currentSection) return;
-                    setSelectedPhoto(prev => (prev + 1) % currentSection.photos.length);
-                  }}
+                  onClick={() => setSelectedPhoto(prev => (prev + 1) % photos.length)}
                   aria-label="Next photo"
                 >
                   <IoIosArrowForward size={24} color="white" />
@@ -140,15 +120,15 @@ export default function MalesInFilm() {
 
                 <div className={styles.infoOverlay}>
                   <h3 className="text-white text-xl font-semibold mb-2">
-                    {galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].title}
+                    {photos[selectedPhoto].title}
                   </h3>
                   <p className="text-gray-200">
-                    {galleryData.find(section => section.category === selectedCategory)?.photos[selectedPhoto].caption}
+                    {photos[selectedPhoto].caption}
                   </p>
                   <div className={styles.progressBar}>
                     <div
                       className={styles.progressFill}
-                      style={{ width: `${((selectedPhoto + 1) / galleryData.find(section => section.category === selectedCategory)?.photos.length) * 100}%` }}
+                      style={{ width: `${((selectedPhoto + 1) / photos.length) * 100}%` }}
                     />
                   </div>
                 </div>
