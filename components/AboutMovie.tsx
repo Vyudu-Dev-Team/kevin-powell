@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
+import styles from '../styles/AboutMovie.module.css';
 
 export default function AboutMovie() {
   const containerRef = useRef(null);
@@ -16,21 +17,15 @@ export default function AboutMovie() {
   return (
     <section 
       ref={containerRef} 
-      className="relative py-12 md:py-16 overflow-hidden"
+      className="relative py-12 md:py-16 overflow-hidden bg-black"
     >
-      {/* Background Image with Parallax */}
+      {/* Background with Parallax */}
       <motion.div 
         className="absolute inset-0 -z-10"
         style={{ y }}
       >
-        <Image
-          src="/images/Manwithguitar.jpeg"
-          alt="Man with guitar"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className={styles.brickWall} />
+        <div className={styles.overlay} />
       </motion.div>
 
       {/* Content */}
