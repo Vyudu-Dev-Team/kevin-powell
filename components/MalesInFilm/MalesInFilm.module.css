@@ -1,6 +1,6 @@
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
   padding: 1rem;
 }
@@ -9,10 +9,10 @@
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
-  background: transparent;
+  background: #1a1a1a;
   transition: transform 0.3s ease;
   cursor: pointer;
-  aspect-ratio: 3/4;
+  aspect-ratio: 2/3;
 }
 
 .photoCard:hover {
@@ -33,13 +33,18 @@
 .photoOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    transparent 100%
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .photoCard:hover .photoOverlay {
@@ -49,10 +54,11 @@
 .modalContent {
   position: relative;
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
 }
 
 .closeButton {
@@ -68,12 +74,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 50;
 }
 
 .closeButton:hover {
   background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
 }
 
 .navigationButton {
@@ -83,18 +90,19 @@
   background: rgba(0, 0, 0, 0.5);
   border: none;
   border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
+  width: 3.5rem;
+  height: 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 50;
 }
 
 .navigationButton:hover {
   background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .prevButton {
@@ -105,49 +113,38 @@
   right: 2rem;
 }
 
-.infoOverlay {
-  position: absolute;
+.photoInfo {
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 1.5rem;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  z-index: 40;
 }
 
-.showInfo .infoOverlay {
-  transform: translateY(0);
-}
-
-.progressBar {
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.2);
-  margin-top: 1rem;
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.progressFill {
-  height: 100%;
-  background: white;
-  transition: width 0.3s ease;
-}
-
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .galleryGrid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
   }
 
   .navigationButton {
-    width: 4rem;
-    height: 4rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
-  .closeButton {
-    width: 4rem;
-    height: 4rem;
+  .prevButton {
+    left: 1rem;
+  }
+
+  .nextButton {
+    right: 1rem;
+  }
+
+  .photoInfo {
+    padding: 1rem;
   }
 }

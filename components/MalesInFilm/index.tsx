@@ -13,8 +13,17 @@ export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
-  const filteredPhotos = photos.filter(photo => photo.category === selectedCategory);
+  const filteredPhotos = photos
+    .filter(photo => photo.category === selectedCategory)
+    .filter(photo => !failedImages.has(photo.src));
+
+  const handleImageError = (src: string) => {
+    setFailedImages(prev => new Set([...prev, src]));
+    console.error(`Failed to load image: ${src}`);
+  };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (selectedPhoto === null) return;
@@ -110,14 +119,28 @@ export default function MalesInFilm() {
                         onClick={() => setSelectedPhoto(index)}
                         role="button"
                         tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedPhoto(index);
+                          }
+                        }}
                       >
                         <Image
                           src={photo.src}
                           alt={photo.alt}
-                          width={400}
-                          height={600}
-                          className="w-full h-full object-cover"
+                          width={800}
+                          height={1200}
+                          className={`w-full h-full object-cover ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+                          priority={index < 4}
+                          quality={90}
+                          onLoadingComplete={() => setIsImageLoading(false)}
+                          onError={() => handleImageError(photo.src)}
                         />
+                        {isImageLoading && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+                            <div className="w-8 h-8 border-4 border-primary rounded-full animate-spin border-t-transparent"></div>
+                          </div>
+                        )}
                         <div className={styles.photoOverlay}>
                           <h3 className="text-white font-semibold">{photo.title}</h3>
                           <p className="text-gray-200 text-sm">{photo.caption}</p>
@@ -176,14 +199,24 @@ export default function MalesInFilm() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
+                  className="relative w-full h-full flex items-center justify-center"
                 >
                   <Image
                     src={filteredPhotos[selectedPhoto].src}
                     alt={filteredPhotos[selectedPhoto].alt}
-                    width={1200}
-                    height={800}
-                    className="max-h-[90vh] w-auto h-auto object-contain"
+                    width={1920}
+                    height={1080}
+                    className={`max-h-[90vh] w-auto h-auto object-contain ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+                    priority
+                    quality={100}
+                    onLoadingComplete={() => setIsImageLoading(false)}
+                    onError={() => handleImageError(filteredPhotos[selectedPhoto].src)}
                   />
+                  {isImageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-8 h-8 border-4 border-primary rounded-full animate-spin border-t-transparent"></div>
+                    </div>
+                  )}
                 </motion.div>
 
                 <motion.button
@@ -199,23 +232,13 @@ export default function MalesInFilm() {
                 <AnimatePresence>
                   {showInfo && (
                     <motion.div
-                      className={styles.infoOverlay}
-                      initial={{ y: 100, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: 100, opacity: 0 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      className={styles.photoInfo}
                     >
-                      <h3 className="text-white text-xl font-semibold mb-2">
-                        {filteredPhotos[selectedPhoto].title}
-                      </h3>
-                      <p className="text-gray-200">
-                        {filteredPhotos[selectedPhoto].caption}
-                      </p>
-                      <div className={styles.progressBar}>
-                        <div
-                          className={styles.progressFill}
-                          style={{ width: `${((selectedPhoto + 1) / filteredPhotos.length) * 100}%` }}
-                        />
-                      </div>
+                      <h3 className="text-xl font-semibold mb-2">{filteredPhotos[selectedPhoto].title}</h3>
+                      <p className="text-gray-300">{filteredPhotos[selectedPhoto].caption}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
