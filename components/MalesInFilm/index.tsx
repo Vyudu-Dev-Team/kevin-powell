@@ -17,7 +17,7 @@ import {
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Photo, GallerySection } from '@/types/gallery';
 import { galleryData } from './gallery-data';
-import styles from './PhotoGallery.module.css';
+import styles from './MalesInFilm.module.css';
 
 export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
