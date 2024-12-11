@@ -5,6 +5,7 @@ export interface Photo {
   category: 'main' | 'contemporary' | 'archival';
   width: number;
   height: number;
+  caption: string;
 }
 
 export interface GallerySection {

@@ -3,7 +3,7 @@ import { GallerySection } from '@/types/gallery';
 export const galleryData: GallerySection[] = [
   {
     title: 'Main Collection',
-    description: 'Featured photographs from the documentary',
+    description: 'Key interviews and powerful moments that define our documentary',
     category: 'main',
     photos: Array.from({ length: 13 }, (_, i) => ({
       id: `main-${i + 1}`,
@@ -12,11 +12,12 @@ export const galleryData: GallerySection[] = [
       category: 'main',
       width: 1200,
       height: 1600,
+      caption: 'Exploring perspectives on manhood, identity, and community',
     })),
   },
   {
     title: 'Contemporary',
-    description: 'Modern perspectives on Black manhood',
+    description: 'Modern voices shaping the narrative of Black masculinity',
     category: 'contemporary',
     photos: Array.from({ length: 21 }, (_, i) => ({
       id: `contemporary-${i + 1}`,
@@ -25,11 +26,12 @@ export const galleryData: GallerySection[] = [
       category: 'contemporary',
       width: 1200,
       height: 1600,
+      caption: 'Present-day stories and experiences',
     })),
   },
   {
     title: 'Archival',
-    description: 'Historical photographs and documents',
+    description: 'Historical context and generational perspectives',
     category: 'archival',
     photos: Array.from({ length: 15 }, (_, i) => ({
       id: `archival-${i + 1}`,
@@ -38,6 +40,7 @@ export const galleryData: GallerySection[] = [
       category: 'archival',
       width: 1200,
       height: 1600,
+      caption: 'Connecting past wisdom with present understanding',
     })),
   },
 ];
