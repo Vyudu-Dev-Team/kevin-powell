@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { Modal } from '@nextui-org/react';
 import { IoClose } from 'react-icons/io5';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +11,6 @@ import { photos } from './gallery-data';
 export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
-  const [showInfo, setShowInfo] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
@@ -37,10 +35,6 @@ export default function MalesInFilm() {
         break;
       case 'Escape':
         setSelectedPhoto(null);
-        setShowInfo(false);
-        break;
-      case 'i':
-        setShowInfo((prev) => !prev);
         break;
     }
   }, [selectedPhoto, filteredPhotos.length]);
@@ -66,7 +60,6 @@ export default function MalesInFilm() {
 
   const handleClose = () => {
     setSelectedPhoto(null);
-    setShowInfo(false);
     setIsImageLoading(true);
   };
 
@@ -141,14 +134,14 @@ export default function MalesInFilm() {
                     isImageLoading ? 'opacity-0' : 'opacity-100'
                   }`}
                   priority={index < 4}
-                  quality={90}
+                  quality={75}
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   onLoadingComplete={() => setIsImageLoading(false)}
                   onError={() => handleImageError(photo.src)}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LC0yMi4xODY6NT87Pi45ODVFRkdGNjNPUFZXUE1MTVBPT0z/2wBDAR"
                 />
-                <div className={styles.photoOverlay}>
-                  <h3 className="text-lg font-semibold">{photo.title}</h3>
-                  <p className="text-sm opacity-90">{photo.caption}</p>
-                </div>
               </motion.div>
             ))}
           </div>
@@ -158,7 +151,6 @@ export default function MalesInFilm() {
           <div 
             className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
             onClick={(e) => {
-              // Close modal when clicking the background
               if (e.target === e.currentTarget) {
                 handleClose();
               }
@@ -193,21 +185,13 @@ export default function MalesInFilm() {
                   height={1080}
                   className="max-h-[90vh] w-auto h-auto object-contain mx-auto"
                   priority
-                  quality={100}
+                  quality={90}
                   onLoadingComplete={() => setIsImageLoading(false)}
                   onError={() => handleImageError(filteredPhotos[selectedPhoto].src)}
+                  sizes="100vw"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LC0yMi4xODY6NT87Pi45ODVFRkdGNjNPUFZXUE1MTVBPT0z/2wBDAR"
                 />
-              )}
-
-              {showInfo && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {filteredPhotos[selectedPhoto].title}
-                  </h3>
-                  <p className="text-gray-200">
-                    {filteredPhotos[selectedPhoto].caption}
-                  </p>
-                </div>
               )}
             </div>
 
