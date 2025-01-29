@@ -63,9 +63,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return (<>
     <div className={styles.videoSection}>
       <iframe 
-        src="https://www.youtube.com/embed/WUGKFJm1iUY?autoplay=1&controls=0&mute=1&loop=1&playlist=WUGKFJm1iUY&hd=1" 
+        src="https://www.youtube.com/embed/WUGKFJm1iUY?autoplay=1&controls=0&mute=0&loop=1&playlist=WUGKFJm1iUY&hd=1" 
         title="When We Free The World Trailer"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; modestbranding=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; modestbranding=1; controls=1"
         className={styles.videoIframe}
         style={{ opacity: Number(videoOpacity) }}
       />
