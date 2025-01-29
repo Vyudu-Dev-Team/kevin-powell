@@ -40,7 +40,7 @@ export default function Navigation() {
   const menuItems = [
     { href: '#overview', label: 'Overview' },
     { href: '#about', label: 'About' },
-    { href: '#director', label: 'Director' },
+    { href: '#directors', label: 'Directors' },
     { href: '#males-in-film', label: 'The Males in the Film' },
     { href: '#contact', label: 'Contact' }
   ];

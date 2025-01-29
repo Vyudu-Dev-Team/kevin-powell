@@ -23,3 +23,7 @@ export interface ImageLoaderProps {
   width: number;
   quality?: number;
 }
+
+export interface SectionProps {
+  id?: string;
+}

@@ -14,7 +14,7 @@ export default function Home() {
       <HeroSection />
       <MovieDetailsSection />
       <AboutMovie />
-      <DirectorSection />
+      <DirectorSection  />
       <MalesInFilm />
       <ContactSection />
       <Footer />

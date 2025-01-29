@@ -18,7 +18,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const [isHovering, setIsHovering] = useState(false);
   const { scrollY } = useScroll();
   
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const videoOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const imageOpacity = useTransform(scrollY, [300, 600], [0, 1]);
   
   // Spring animations para suavizar o movimento
   const rotateX = useSpring(0, {
@@ -59,11 +60,20 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     rotateY.set(0);
   };
 
-  return (
+  return (<>
+    <div className={styles.videoSection}>
+      <iframe 
+        src="https://www.youtube.com/embed/WUGKFJm1iUY?autoplay=1&controls=0&mute=1&loop=1&playlist=WUGKFJm1iUY&hd=1" 
+        title="When We Free The World Trailer"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; modestbranding=1"
+        className={styles.videoIframe}
+        style={{ opacity: videoOpacity }}
+      />
+    </div>
     <motion.div 
       ref={containerRef}
       className={styles.heroContainer}
-      style={{ opacity }}
+      style={{ opacity: imageOpacity }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -83,9 +93,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           priority
           quality={100}
           sizes="100vw"
-          style={{
-            objectFit: 'cover',
-          }}
+          
         />
         <motion.div 
           className={styles.glareEffect}
@@ -95,6 +103,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         />
       </motion.div>
     </motion.div>
+    </>
   );
 };
 
