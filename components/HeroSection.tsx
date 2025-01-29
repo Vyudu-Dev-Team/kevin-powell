@@ -67,7 +67,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         title="When We Free The World Trailer"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; modestbranding=1"
         className={styles.videoIframe}
-        style={{ opacity: videoOpacity }}
+        style={{ opacity: Number(videoOpacity) }}
       />
     </div>
     <motion.div 

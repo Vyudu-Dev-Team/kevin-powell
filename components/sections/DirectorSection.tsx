@@ -3,10 +3,13 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { TeamMember, PopupPosition } from '../types';
-import ErrorBoundary from './ErrorBoundary';
-import ProgressiveImage from './ProgressiveImage';
+// import { TeamMember, PopupPosition } from '../types';
+// import ErrorBoundary from './ErrorBoundary';
+// import ProgressiveImage from './ProgressiveImage';
 import styles from '../styles/DirectorSection.module.css';
+import { PopupPosition, TeamMember } from '@/types';
+import ErrorBoundary from '../ErrorBoundary';
+import ProgressiveImage from '../ProgressiveImage';
 
 const teamMembers: TeamMember[] = [
   {
