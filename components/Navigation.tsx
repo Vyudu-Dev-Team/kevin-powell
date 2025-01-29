@@ -42,7 +42,7 @@ export default function Navigation() {
     { href: '#about', label: 'About' },
     { href: '#directors', label: 'Directors' },
     { href: '#males-in-film', label: 'The Males in the Film' },
-    { href: '#contact', label: 'Contact' }
+    { href: '#contact', label: 'Screen the Film' }
   ];
 
   const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

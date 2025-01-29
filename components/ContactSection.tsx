@@ -12,10 +12,9 @@ export default function ContactSection() {
           transition={{ duration: 1 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-7xl font-bold mb-8">Let's Create Together</h2>
+          <h2 className="text-5xl md:text-7xl font-bold mb-8">How to Screen The Film?</h2>
           <p className="text-xl opacity-80 max-w-2xl mx-auto">
-            Ready to bring your vision to life? Get in touch and let's start a conversation
-            about your next project.
+            Interested in bringing WHEN WE FREE THE WORLD to your community, school, or group? Complete the form below and we'll be in touch with details.
           </p>
         </motion.div>
         
