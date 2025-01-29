@@ -11,7 +11,7 @@ import { photos } from './gallery-data';
 export default function MalesInFilm() {
   const [selectedCategory, setSelectedCategory] = useState<string>('main');
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
-  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [loadingImages, setLoadingImages] = useState<{ [key: string]: boolean }>({});
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   const filteredPhotos = photos
@@ -60,7 +60,13 @@ export default function MalesInFilm() {
 
   const handleClose = () => {
     setSelectedPhoto(null);
-    setIsImageLoading(true);
+  };
+
+  const handleImageLoad = (src: string) => {
+    setLoadingImages(prev => ({
+      ...prev,
+      [src]: false
+    }));
   };
 
   const categories = [
@@ -131,13 +137,13 @@ export default function MalesInFilm() {
                   width={800}
                   height={1200}
                   className={`w-full h-full object-cover transition-opacity duration-300 ${
-                    isImageLoading ? 'opacity-0' : 'opacity-100'
+                    loadingImages[photo.src] ? 'opacity-0' : 'opacity-100'
                   }`}
                   priority={index < 4}
                   quality={75}
                   loading={index < 4 ? 'eager' : 'lazy'}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  onLoadingComplete={() => setIsImageLoading(false)}
+                  onLoadingComplete={() => handleImageLoad(photo.src)}
                   onError={() => handleImageError(photo.src)}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LC0yMi4xODY6NT87Pi45ODVFRkdGNjNPUFZXUE1MTVBPT0z/2wBDAR"
@@ -186,7 +192,7 @@ export default function MalesInFilm() {
                   className="max-h-[90vh] w-auto h-auto object-contain mx-auto"
                   priority
                   quality={90}
-                  onLoadingComplete={() => setIsImageLoading(false)}
+                  onLoadingComplete={() => handleImageLoad(filteredPhotos[selectedPhoto].src)}
                   onError={() => handleImageError(filteredPhotos[selectedPhoto].src)}
                   sizes="100vw"
                   placeholder="blur"
