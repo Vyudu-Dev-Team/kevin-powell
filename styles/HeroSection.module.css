@@ -147,41 +147,34 @@
   .heroContainer {
     padding: 16px;
     height: 100vh;
-    min-height: -webkit-fill-available;
   }
 
   .imageWrapper {
     width: 100%;
-    height: 100%;
-    padding: 0;
+    height: auto;
+    max-height: 85vh;
     margin: 0;
-  }
-
-  .imgWrapper {
-    width: 100%;
-    height: 100%;
-    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .imgWrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: auto;
+    height: auto;
+    max-width: 100%;
     max-height: 85vh;
-    padding: 0;
-    margin: 0;
+    object-fit: contain;
   }
 
   .videoSection {
     height: 100vh;
-    min-height: -webkit-fill-available;
   }
 
   .videoIframe {
     width: 100%;
     height: 100%;
     min-width: 100%;
-    object-fit: cover;
   }
 }
 
@@ -189,6 +182,10 @@
 @media screen and (max-width: 480px) {
   .heroContainer {
     padding: 12px;
+  }
+  
+  .imageWrapper {
+    max-height: 80vh;
   }
   
   .imgWrapper img {
