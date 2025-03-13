@@ -135,21 +135,29 @@
   .heroContainer {
     padding: 10px;
     height: 100vh;
+    min-height: -webkit-fill-available; /* Fix for iOS Safari */
   }
 
   .imageWrapper {
     width: 100%;
     height: 100%;
+    max-height: 100vh;
   }
 
   .videoSection {
     height: 100vh;
+    min-height: -webkit-fill-available; /* Fix for iOS Safari */
   }
 
   .videoIframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 100vw;
     height: 100vh;
+    transform: translate(-50%, -50%);
     min-width: 100%;
+    object-fit: cover;
   }
 }
 
