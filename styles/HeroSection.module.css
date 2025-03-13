@@ -17,7 +17,7 @@
   border: none;
   aspect-ratio: 16/9;
   min-height: 100vh;
-  min-width: 177.77vh; /* Maintain 16:9 aspect ratio */
+  min-width: 177.77vh;
 }
 
 .heroContainer {
@@ -37,13 +37,25 @@
   width: 100%;
   max-width: 1920px;
   margin: 0 auto;
-  aspect-ratio: 16/9;
   height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .imgWrapper img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 90vh;
   object-fit: contain;
   object-position: center;
 }
@@ -133,29 +145,41 @@
 /* Mobile Responsive Styles */
 @media screen and (max-width: 768px) {
   .heroContainer {
-    padding: 10px;
+    padding: 16px;
     height: 100vh;
-    min-height: -webkit-fill-available; /* Fix for iOS Safari */
+    min-height: -webkit-fill-available;
   }
 
   .imageWrapper {
     width: 100%;
     height: 100%;
-    max-height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+
+  .imgWrapper {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  .imgWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-height: 85vh;
+    padding: 0;
+    margin: 0;
   }
 
   .videoSection {
     height: 100vh;
-    min-height: -webkit-fill-available; /* Fix for iOS Safari */
+    min-height: -webkit-fill-available;
   }
 
   .videoIframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 100vh;
-    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     min-width: 100%;
     object-fit: cover;
   }
@@ -164,11 +188,10 @@
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .heroContainer {
-    padding: 5px;
+    padding: 12px;
   }
   
-  .videoIframe {
-    width: 100vw;
-    height: 100vh;
+  .imgWrapper img {
+    max-height: 80vh;
   }
 }
