@@ -75,7 +75,7 @@ export default function ImageSlider() {
   }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-lg">
+    <div className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl">
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={currentIndex}
@@ -89,8 +89,8 @@ export default function ImageSlider() {
             src={images[currentIndex].src}
             alt={images[currentIndex].alt}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
+            sizes="(max-width: 480px) 95vw, (max-width: 768px) 90vw, 50vw"
+            className="object-cover object-center"
             priority
             onLoadingComplete={() => setIsLoaded(true)}
             unoptimized
@@ -100,14 +100,15 @@ export default function ImageSlider() {
       </AnimatePresence>
       
       {isLoaded && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5 sm:space-x-2 z-10">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentIndex ? 'bg-white w-4' : 'bg-white/50'
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all ${
+                index === currentIndex ? 'bg-white w-3 sm:w-4' : 'bg-white/50'
               }`}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
