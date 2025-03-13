@@ -70,7 +70,7 @@ export default function MovieDetailsSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative bg-black text-white py-8 md:py-16 lg:py-20 overflow-hidden will-change-transform"
+      className="relative bg-black text-white py-4 md:py-12 lg:py-16 overflow-hidden will-change-transform"
       id="overview"
     >
       {/* Artistic Background Elements */}
@@ -85,14 +85,14 @@ export default function MovieDetailsSection() {
 
       {/* Main Content Container */}
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
           {/* Left Content */}
           <div className="flex-1 pl-0 lg:pl-[35px] w-full">
-            <div className="mb-8 lg:mb-16 text-center lg:text-left">
+            <div className="mb-6 lg:mb-12 text-center lg:text-left">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold bg-gradient-to-r from-white to-gray-400 text-transparent bg-clip-text mb-4 lg:mb-6">
                 When We Free The World
               </h1>
-              <div className="text-lg sm:text-xl md:text-2xl text-gray-300 space-y-2 mb-6 lg:mb-8">
+              <div className="text-lg sm:text-xl md:text-2xl text-gray-300 space-y-2 mb-4 lg:mb-6">
                 <p>A FILM BY Kevin Powell</p>
                 <p>Produced by Evangeline Lawson & Kevin Powell</p>
               </div>
@@ -103,7 +103,7 @@ export default function MovieDetailsSection() {
           </div>
           
           {/* Right Content - Slider */}
-          <div className="flex-1 h-[400px] sm:h-[500px] lg:h-[600px] w-full relative">
+          <div className="flex-1 h-auto aspect-video w-full relative">
             <ImageSlider />
           </div>
         </div>
